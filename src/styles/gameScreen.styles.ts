@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   root: {
+    flex: 1,
     backgroundColor: '#FAF7F2',
     overflow: 'hidden',
   },
@@ -96,5 +97,86 @@ export const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: 'hidden',
     letterSpacing: -0.3,
+  },
+  menuOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(17,17,17,0.50)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 60
+  },
+  menuInner: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  menuCard: {
+    width: '100%',
+    maxWidth: 340,
+    alignSelf: 'center',
+    backgroundColor: '#FCFCFC',
+    borderRadius: 24,
+    paddingVertical: 24,
+    paddingHorizontal: 20,
+    gap: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.06)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0,
+    shadowRadius: 0,
+    elevation: 0,
+  },
+  menuTitle: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: '#2E2E2E',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  menuBtn: {
+    width: '100%',
+    minHeight: 50,
+    paddingVertical: 14,
+    borderRadius: 999,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  menuBtnPrimary: {
+    backgroundColor: '#2A2A2A',
+  },
+  menuBtnPrimaryPressed: {
+    opacity: 0.88,
+    transform: [{ scale: 0.98 }],
+  },
+  menuBtnSecondary: {
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    borderWidth: 1.5,
+    borderColor: '#D8D4CC',
+  },
+  menuBtnSecondaryPressed: {
+    backgroundColor: 'rgba(0,0,0,0.04)',
+    transform: [{ scale: 0.98 }],
+  },
+  menuBtnGhost: {
+    paddingVertical: 12,
+  },
+  menuBtnGhostPressed: {
+    opacity: 0.65,
+  },
+  menuBtnPrimaryText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#FAF7F2',
+  },
+  menuBtnSecondaryText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#3D3D3D',
+  },
+  menuBtnGhostText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#8A8A8A',
   },
 });

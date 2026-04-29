@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { View, Text, Pressable, useWindowDimensions } from 'react-native';
+import { View, Text, Pressable, useWindowDimensions, BackHandler, Platform } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -46,19 +46,30 @@ export default function GameScreen() {
 
   const status = useGameStore((s) => s.status);
   const tier = useGameStore((s) => s.tier);
+  const isPaused = useGameStore((s) => s.isPaused);
+  const gameSessionId = useGameStore((s) => s.gameSessionId);
   const startGame = useGameStore((s) => s.startGame);
   const setHighScore = useGameStore((s) => s.setHighScore);
+  const resetSessionIdle = useGameStore((s) => s.resetSessionIdle);
 
-  // Reset to idle when the screen is focused from Home (not from gameover "play again")
+  // Leaving mid-game (gesture back, stack pop, etc.) must not leave `playing` in the store.
   useFocusEffect(
     useCallback(() => {
       const currentStatus = useGameStore.getState().status;
-      // Only reset if we're arriving from a completed/idle state, not mid-play
       if (currentStatus === 'over') {
         useGameStore.setState({ status: 'idle' });
       }
-    }, []),
+      return () => {
+        if (useGameStore.getState().status === 'playing') {
+          resetSessionIdle();
+        }
+      };
+    }, [resetSessionIdle]),
   );
+
+  useEffect(() => {
+    prevTierRef.current = -1;
+  }, [gameSessionId]);
 
   useEffect(() => {
     if (status === 'playing') {
@@ -72,6 +83,37 @@ export default function GameScreen() {
     screenHeight: height,
     onTilesChange: setTiles,
   });
+
+  const openPauseMenu = useCallback(() => {
+    useGameStore.getState().setPaused(true);
+  }, []);
+
+  const resumeFromMenu = useCallback(() => {
+    useGameStore.getState().setPaused(false);
+  }, []);
+
+  const restartFromMenu = useCallback(() => {
+    startGame();
+  }, [startGame]);
+
+  const quitToHomeFromMenu = useCallback(() => {
+    useGameStore.getState().setPaused(false);
+    resetSessionIdle();
+    router.back();
+  }, [resetSessionIdle, router]);
+
+  useEffect(() => {
+    if (Platform.OS !== 'android') return;
+    const onBackPress = () => {
+      if (useGameStore.getState().status !== 'playing') return false;
+      if (!useGameStore.getState().isPaused) {
+        openPauseMenu();
+      }
+      return true;
+    };
+    const sub = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    return () => sub.remove();
+  }, [openPauseMenu]);
 
   // ── Tier-up flash ─────────────────────────────────────────────────────────
   useEffect(() => {
@@ -112,6 +154,7 @@ export default function GameScreen() {
   // ── Tile tap handler ───────────────────────────────────────────────────────
   const handleTileTap = useCallback(
     (tile: TileData) => {
+      if (useGameStore.getState().isPaused) return;
       const { nextByColor, tapHit, tapMiss, combo } = useGameStore.getState();
 
       if (tile.num === nextByColor[tile.colorId]) {
@@ -166,7 +209,53 @@ export default function GameScreen() {
   }
 
   return (
-    <View style={[styles.root, { width, height }]}>
+    <View style={styles.root}>
+      {isPaused && (
+        <View
+          style={[
+            styles.menuOverlay,
+            {
+              paddingTop: insets.top + 12,
+              paddingBottom: insets.bottom + 12,
+              paddingLeft: insets.left + 20,
+              paddingRight: insets.right + 20,
+            },
+          ]}
+        >
+          <View style={styles.menuInner}>
+            <View style={[styles.menuCard, { maxHeight: height * 0.84 }]}>
+              <Text style={styles.menuTitle}>Game Paused</Text>
+              <Pressable
+                style={({ pressed }) => [
+                  styles.menuBtn,
+                  styles.menuBtnPrimary,
+                  pressed && styles.menuBtnPrimaryPressed,
+                ]}
+                onPress={resumeFromMenu}
+              >
+                <Text style={styles.menuBtnPrimaryText}>Resume</Text>
+              </Pressable>
+              <Pressable
+                style={({ pressed }) => [
+                  styles.menuBtn,
+                  styles.menuBtnSecondary,
+                  pressed && styles.menuBtnSecondaryPressed,
+                ]}
+                onPress={restartFromMenu}
+              >
+                <Text style={styles.menuBtnSecondaryText}>New Game</Text>
+              </Pressable>
+              <Pressable
+                style={({ pressed }) => [styles.menuBtnGhost, pressed && styles.menuBtnGhostPressed]}
+                onPress={quitToHomeFromMenu}
+              >
+                <Text style={styles.menuBtnGhostText}>Exit to Home</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      )}
+
       {/* Falling tiles — yAnim lives on the UI thread, no JS re-renders for motion */}
       {tiles.map((tile) => {
         const yAnim = tileYAnims.current.get(tile.id);

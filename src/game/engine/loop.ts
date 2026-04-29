@@ -39,6 +39,7 @@ export interface UseGameLoopReturn {
   tileYAnims: MutableRefObject<Map<string, SharedValue<number>>>;
   removeTile: (id: string) => void;
   markTile: (id: string, status: TileData['status']) => void;
+  clearBoardForPause: () => void;
 }
 
 export function useGameLoop({
@@ -53,6 +54,9 @@ export function useGameLoop({
   const tilesRef = useRef<TileData[]>([]);
   const yAnimsRef = useRef<Map<string, SharedValue<number>>>(new Map());
   const startTimeRef = useRef(0);
+  const pausedTotalMsRef = useRef(0);
+  const pauseStartedAtRef = useRef<number | null>(null);
+  const animationsPausedRef = useRef(false);
   const lastSpawnRef = useRef(0);
   const prevTierRef = useRef(-1);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -60,6 +64,7 @@ export function useGameLoop({
   const EXIT_Y = screenHeight + TILE_RADIUS;
 
   const status = useGameStore((s) => s.status);
+  const gameSessionId = useGameStore((s) => s.gameSessionId);
 
   // ── Publish tile metadata to React state (no y needed) ──────────────────
   const publishTiles = useCallback(() => {
@@ -69,8 +74,8 @@ export function useGameLoop({
   // ── Called (via runOnJS) when a tile's fall animation completes ───────────
   const handleTileExit = useCallback(
     (id: string, colorId: string, num: number) => {
-      const { nextByColor, loseLife } = useGameStore.getState();
-      if (num === nextByColor[colorId as ColorId]) {
+      const { nextByColor, loseLife, isPaused } = useGameStore.getState();
+      if (!isPaused && num === nextByColor[colorId as ColorId]) {
         loseLife(colorId as ColorId);
       }
       yAnimsRef.current.delete(id);
@@ -139,6 +144,47 @@ export function useGameLoop({
     [EXIT_Y, handleTileExit],
   );
 
+  // ── Pause/resume falling tiles without clearing the board ────────────────
+  const pauseFallingAnimations = useCallback(() => {
+    for (const tile of tilesRef.current) {
+      if (tile.status !== 'falling') continue;
+      const yAnim = yAnimsRef.current.get(tile.id);
+      if (yAnim) cancelAnimation(yAnim);
+    }
+  }, []);
+
+  const resumeFallingAnimations = useCallback(
+    (newFallDuration: number) => {
+      for (const tile of tilesRef.current) {
+        if (tile.status !== 'falling') continue;
+        const yAnim = yAnimsRef.current.get(tile.id);
+        if (!yAnim) continue;
+
+        const currentY = yAnim.value;
+        const remaining = EXIT_Y - currentY;
+        if (remaining <= 0) continue;
+
+        const totalTravel = EXIT_Y - (-TILE_RADIUS);
+        const resumedDuration = (remaining / totalTravel) * newFallDuration;
+
+        const tileId = tile.id;
+        const colorId = tile.colorId;
+        const num = tile.num;
+        const onExit = handleTileExit;
+
+        yAnim.value = withTiming(
+          EXIT_Y,
+          { duration: resumedDuration, easing: Easing.linear },
+          (finished) => {
+            'worklet';
+            if (finished) runOnJS(onExit)(tileId, colorId, num);
+          },
+        );
+      }
+    },
+    [EXIT_Y, handleTileExit],
+  );
+
   // ── Main effect: start/stop the logic interval ────────────────────────────
   useEffect(() => {
     if (status !== 'playing') {
@@ -146,6 +192,9 @@ export function useGameLoop({
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
+      pauseStartedAtRef.current = null;
+      pausedTotalMsRef.current = 0;
+      animationsPausedRef.current = false;
       if (status === 'idle') {
         for (const a of yAnimsRef.current.values()) cancelAnimation(a);
         yAnimsRef.current.clear();
@@ -164,18 +213,42 @@ export function useGameLoop({
 
     const now = Date.now();
     startTimeRef.current = now;
+    pausedTotalMsRef.current = 0;
+    pauseStartedAtRef.current = null;
+    animationsPausedRef.current = false;
     lastSpawnRef.current = now - 9999; // trigger immediate first spawn
 
     intervalRef.current = setInterval(() => {
       const ts = Date.now();
-      const elapsed = ts - startTimeRef.current;
-      const { setTier, status: currentStatus } = useGameStore.getState();
+      const { setTier, status: currentStatus, isPaused } = useGameStore.getState();
 
       if (currentStatus !== 'playing') return;
 
+      if (isPaused) {
+        if (pauseStartedAtRef.current === null) {
+          pauseStartedAtRef.current = ts;
+        }
+        if (!animationsPausedRef.current) {
+          pauseFallingAnimations();
+          animationsPausedRef.current = true;
+        }
+        return;
+      }
+
+      if (pauseStartedAtRef.current !== null) {
+        pausedTotalMsRef.current += ts - pauseStartedAtRef.current;
+        pauseStartedAtRef.current = null;
+      }
+
+      const elapsed = ts - startTimeRef.current - pausedTotalMsRef.current;
       const tierIdx = getTierIndex(elapsed);
       setTier(tierIdx);
       const cfg = getTierConfig(elapsed);
+
+      if (animationsPausedRef.current) {
+        resumeFallingAnimations(cfg.fallDuration);
+        animationsPausedRef.current = false;
+      }
 
       // Speed update when tier advances
       if (tierIdx !== prevTierRef.current && prevTierRef.current !== -1) {
@@ -205,7 +278,7 @@ export function useGameLoop({
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, screenWidth, screenHeight]);
+  }, [status, gameSessionId, screenWidth, screenHeight]);
 
   // ── External control ──────────────────────────────────────────────────────
 
@@ -237,5 +310,12 @@ export function useGameLoop({
     [publishTiles],
   );
 
-  return { tileYAnims: yAnimsRef, removeTile, markTile };
+  const clearBoardForPause = useCallback(() => {
+    for (const a of yAnimsRef.current.values()) cancelAnimation(a);
+    yAnimsRef.current.clear();
+    tilesRef.current = [];
+    publishTiles();
+  }, [publishTiles]);
+
+  return { tileYAnims: yAnimsRef, removeTile, markTile, clearBoardForPause };
 }

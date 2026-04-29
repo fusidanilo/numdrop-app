@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useGameStore } from '../src/game/store/gameStore';
-import { COLORS, COLOR_ORDER } from '../src/game/config/colors';
-import { loadHighScore } from '../src/game/utils/storage';
+import { useGameStore } from '@/game/store/gameStore';
+import { COLORS, COLOR_ORDER } from '@/game/config/colors';
+import { loadHighScore } from '@/game/utils/storage';
+import { styles } from '@/styles/homeScreen.styles';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -45,7 +46,7 @@ export default function HomeScreen() {
         ))}
       </View>
 
-      <Text style={styles.title}>NumDrop</Text>
+      <Text style={styles.title}>Numdrop</Text>
       <Text style={styles.subtitle}>Tap the right number{'\n'}for each colour — before it falls.</Text>
 
       {highScore > 0 && (
@@ -77,109 +78,3 @@ export default function HomeScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: '#FAF7F2',
-    paddingHorizontal: 28,
-    alignItems: 'center',
-  },
-  deco: {
-    flexDirection: 'row',
-    marginBottom: 32,
-    alignItems: 'center',
-  },
-  decoTile: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  decoNum: {
-    fontSize: 26,
-    fontWeight: '800',
-  },
-  title: {
-    fontSize: 36,
-    fontWeight: '800',
-    color: '#2E2E2E',
-    letterSpacing: -1.5,
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#888',
-    textAlign: 'center',
-    marginTop: 8,
-    lineHeight: 22,
-  },
-  highScoreRow: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: 6,
-    marginTop: 16,
-    backgroundColor: '#F0EDE8',
-    paddingHorizontal: 16,
-    paddingVertical: 6,
-    borderRadius: 20,
-  },
-  highScoreLabel: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#999',
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
-  },
-  highScoreValue: {
-    fontSize: 22,
-    fontWeight: '800',
-    color: '#3D3D3D',
-  },
-  spacer: { flex: 1 },
-  howTo: {
-    width: '100%',
-    marginBottom: 32,
-    gap: 10,
-  },
-  howToRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 10,
-  },
-  dot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginTop: 4,
-    flexShrink: 0,
-  },
-  howToText: {
-    flex: 1,
-    fontSize: 14,
-    color: '#666',
-    lineHeight: 20,
-  },
-  btn: {
-    width: '100%',
-    backgroundColor: '#3D3D3D',
-    paddingVertical: 18,
-    borderRadius: 16,
-    alignItems: 'center',
-  },
-  btnPressed: {
-    opacity: 0.75,
-  },
-  btnText: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#FAF7F2',
-    letterSpacing: 0.5,
-  },
-});

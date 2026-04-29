@@ -1,11 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import {
-  View,
-  Text,
-  Pressable,
-  StyleSheet,
-  useWindowDimensions,
-} from 'react-native';
+import { View, Text, Pressable, useWindowDimensions } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -15,13 +9,21 @@ import Animated, {
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFocusEffect } from 'expo-router';
-import { useGameStore } from '../src/game/store/gameStore';
-import { useGameLoop } from '../src/game/engine/loop';
-import { Tile } from '../src/game/components/Tile';
-import { HUD } from '../src/game/components/HUD';
-import type { TileData } from '../src/game/engine/spawner';
-import { feedbackHit, feedbackMiss, feedbackGameOver, feedbackComboMilestone } from '../src/game/utils/sound';
-import { saveHighScore, loadHighScore } from '../src/game/utils/storage';
+import { useGameStore } from '@/game/store/gameStore';
+import { useGameLoop } from '@/game/engine/loop';
+import { Tile } from '@/game/components/Tile';
+import { HUD } from '@/game/components/HUD';
+import type { TileData } from '@/game/engine/spawner';
+import {
+  feedbackHit,
+  feedbackMiss,
+  feedbackGameOver,
+  feedbackComboMilestone,
+  feedbackNewLevel,
+  preloadGameSfx,
+} from '@/game/utils/sound';
+import { saveHighScore, loadHighScore } from '@/game/utils/storage';
+import { styles } from '@/styles/gameScreen.styles';
 
 const TIER_LABELS = ['', 'Level 2', 'Level 3 — 3rd colour!', 'Max speed!'];
 
@@ -58,6 +60,12 @@ export default function GameScreen() {
     }, []),
   );
 
+  useEffect(() => {
+    if (status === 'playing') {
+      preloadGameSfx();
+    }
+  }, [status]);
+
   // ── Game loop ──────────────────────────────────────────────────────────────
   const { tileYAnims, removeTile, markTile } = useGameLoop({
     screenWidth: width,
@@ -69,6 +77,7 @@ export default function GameScreen() {
   useEffect(() => {
     if (tier > 0 && tier > prevTierRef.current) {
       setTierLabel(TIER_LABELS[tier] ?? `Level ${tier + 1}`);
+      feedbackNewLevel();
       tierFlashOpacity.value = withSequence(
         withTiming(1, { duration: 180 }),
         withTiming(1, { duration: 900 }),
@@ -135,18 +144,21 @@ export default function GameScreen() {
   // ── Start overlay ──────────────────────────────────────────────────────────
   if (status === 'idle') {
     return (
-      <View style={[styles.overlay, { backgroundColor: '#FAF7F2' }]}>
+      <View style={[styles.overlay, styles.overlayBg]}>
         <Text style={styles.overlayTitle}>Ready?</Text>
         <Text style={styles.overlayHint}>
           Tap each colour's{'\n'}next number before{'\n'}it falls off screen.
         </Text>
         <Pressable
-          style={({ pressed }) => [styles.startBtn, pressed && { opacity: 0.7 }]}
+          style={({ pressed }) => [styles.startBtn, pressed && styles.startBtnPressed]}
           onPress={startGame}
         >
           <Text style={styles.startBtnText}>Start</Text>
         </Pressable>
-        <Pressable style={styles.backBtn} onPress={() => router.back()}>
+        <Pressable
+          style={({ pressed }) => [styles.backBtn, pressed && styles.backBtnPressed]}
+          onPress={() => router.back()}
+        >
           <Text style={styles.backBtnText}>← Back</Text>
         </Pressable>
       </View>
@@ -180,71 +192,3 @@ export default function GameScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  root: {
-    backgroundColor: '#FAF7F2',
-    overflow: 'hidden',
-  },
-  overlay: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 32,
-    gap: 16,
-  },
-  overlayTitle: {
-    fontSize: 40,
-    fontWeight: '800',
-    color: '#2E2E2E',
-    letterSpacing: -1.5,
-  },
-  overlayHint: {
-    fontSize: 16,
-    color: '#888',
-    textAlign: 'center',
-    lineHeight: 24,
-    marginBottom: 8,
-  },
-  startBtn: {
-    width: '100%',
-    backgroundColor: '#3D3D3D',
-    paddingVertical: 18,
-    borderRadius: 16,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  startBtnText: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#FAF7F2',
-  },
-  backBtn: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-  },
-  backBtnText: {
-    fontSize: 15,
-    color: '#AAA',
-    fontWeight: '500',
-  },
-  tierFlash: {
-    position: 'absolute',
-    top: '40%',
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    pointerEvents: 'none',
-  },
-  tierFlashText: {
-    fontSize: 20,
-    fontWeight: '800',
-    color: '#3D3D3D',
-    backgroundColor: 'rgba(250,247,242,0.9)',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
-    overflow: 'hidden',
-    letterSpacing: -0.3,
-  },
-});

@@ -1,5 +1,5 @@
-import type { ColorId } from '../config/colors';
-import { COLOR_ORDER } from '../config/colors';
+import type { ColorId } from '@/game/config/colors';
+import { COLOR_ORDER } from '@/game/config/colors';
 
 let _idCounter = 0;
 

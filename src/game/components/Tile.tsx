@@ -1,5 +1,5 @@
 import React, { useEffect, memo } from 'react';
-import { Pressable, Text, StyleSheet } from 'react-native';
+import { Pressable, Text } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -8,9 +8,10 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import type { SharedValue } from 'react-native-reanimated';
-import type { TileData } from '../engine/spawner';
-import { TILE_RADIUS } from '../engine/loop';
-import { COLORS } from '../config/colors';
+import type { TileData } from '@/game/engine/spawner';
+import { TILE_RADIUS } from '@/game/engine/loop';
+import { styles } from '@/styles/Tile.styles';
+import { COLORS } from '@/game/config/colors';
 
 interface TileProps {
   data: TileData;
@@ -19,8 +20,6 @@ interface TileProps {
   onTap: (tile: TileData) => void;
   onRemove: (id: string) => void;
 }
-
-const DIAMETER = TILE_RADIUS * 2;
 
 function TileComponent({ data, yAnim, onTap, onRemove }: TileProps) {
   const scale = useSharedValue(1);
@@ -93,29 +92,4 @@ function TileComponent({ data, yAnim, onTap, onRemove }: TileProps) {
  */
 export const Tile = memo(TileComponent, (prev, next) => {
   return prev.data.id === next.data.id && prev.data.status === next.data.status;
-});
-
-const styles = StyleSheet.create({
-  tile: {
-    position: 'absolute',
-    width: DIAMETER,
-    height: DIAMETER,
-    borderRadius: TILE_RADIUS,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.12,
-    shadowRadius: 6,
-    elevation: 4,
-  },
-  pressable: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: TILE_RADIUS,
-  },
-  num: {
-    fontSize: 22,
-    fontWeight: '800',
-    letterSpacing: -0.5,
-  },
 });

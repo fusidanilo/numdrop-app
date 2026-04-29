@@ -24,11 +24,11 @@ import {
   Easing,
 } from 'react-native-reanimated';
 import type { SharedValue } from 'react-native-reanimated';
-import type { TileData } from './spawner';
-import { spawnTile, resetSpawnerCounter } from './spawner';
-import { getTierConfig, getTierIndex } from '../config/levels';
-import type { ColorId } from '../config/colors';
-import { useGameStore } from '../store/gameStore';
+import type { TileData } from '@/game/engine/spawner';
+import { spawnTile, resetSpawnerCounter } from '@/game/engine/spawner';
+import { getTierConfig, getTierIndex } from '@/game/config/levels';
+import type { ColorId } from '@/game/config/colors';
+import { useGameStore } from '@/game/store/gameStore';
 
 export const TILE_RADIUS = 28;
 /** How often the JS loop fires (only for spawn/tier, not position updates) */

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, memo } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -7,9 +7,10 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useGameStore } from '../store/gameStore';
-import { COLORS, COLOR_ORDER } from '../config/colors';
-import type { ColorId } from '../config/colors';
+import { useGameStore } from '@/game/store/gameStore';
+import { COLORS, COLOR_ORDER } from '@/game/config/colors';
+import type { ColorId } from '@/game/config/colors';
+import { styles, tierDotColors } from '@/styles/HUD.styles';
 
 // ─── Score flash ────────────────────────────────────────────────────────────
 
@@ -34,7 +35,9 @@ function ScoreDisplay() {
   return (
     <View style={styles.scoreBlock}>
       <Animated.Text style={[styles.scoreText, animStyle]}>{score}</Animated.Text>
-      {combo > 1 && <Text style={styles.comboText}>×{combo}</Text>}
+      <View style={styles.comboRow}>
+        {combo > 1 ? <Text style={styles.comboText}>×{combo}</Text> : null}
+      </View>
     </View>
   );
 }
@@ -76,7 +79,9 @@ function ChainBadge({ colorId }: { colorId: ColorId }) {
 
   const animStyle = useAnimatedStyle(() => ({ transform: [{ scale: scaleAnim.value }] }));
 
-  if (!visible) return null;
+  if (!visible) {
+    return <View style={styles.badgePlaceholder} />;
+  }
 
   const { tile: bg, text } = COLORS[colorId];
   return (
@@ -97,7 +102,7 @@ function TierDots() {
           key={i}
           style={[
             styles.tierDot,
-            { backgroundColor: i <= tier ? '#3D3D3D' : '#DDD' },
+            { backgroundColor: i <= tier ? tierDotColors.active : tierDotColors.inactive },
           ]}
         />
       ))}
@@ -111,93 +116,24 @@ function HUDComponent() {
   const insets = useSafeAreaInsets();
   return (
     <View style={[styles.container, { paddingTop: insets.top + 8 }]} pointerEvents="none">
-      <Lives />
-      <View style={styles.centerCol}>
-        <ScoreDisplay />
-        <TierDots />
+      <View style={[styles.hudThird, styles.hudThirdLeft]}>
+        <Lives />
       </View>
-      <View style={styles.chainsRow}>
-        {COLOR_ORDER.map((c) => (
-          <ChainBadge key={c} colorId={c} />
-        ))}
+      <View style={[styles.hudThird, styles.hudThirdCenter]}>
+        <View style={styles.centerCol}>
+          <ScoreDisplay />
+          <TierDots />
+        </View>
+      </View>
+      <View style={[styles.hudThird, styles.hudThirdRight]}>
+        <View style={styles.chainsRow}>
+          {COLOR_ORDER.map((c) => (
+            <ChainBadge key={c} colorId={c} />
+          ))}
+        </View>
       </View>
     </View>
   );
 }
 
 export const HUD = memo(HUDComponent);
-
-// ─── Styles ──────────────────────────────────────────────────────────────────
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 20,
-    paddingBottom: 12,
-    backgroundColor: 'rgba(250,247,242,0.88)',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    zIndex: 10,
-  },
-  livesRow: {
-    flexDirection: 'row',
-    gap: 4,
-  },
-  heart: {
-    fontSize: 22,
-    color: '#F4A6A0',
-  },
-  centerCol: {
-    alignItems: 'center',
-    gap: 4,
-  },
-  scoreBlock: {
-    alignItems: 'center',
-  },
-  tierDotsRow: {
-    flexDirection: 'row',
-    gap: 5,
-  },
-  tierDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-  },
-  scoreText: {
-    fontSize: 26,
-    fontWeight: '800',
-    color: '#3D3D3D',
-    letterSpacing: -1,
-  },
-  comboText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#A8D8C9',
-    marginTop: -2,
-  },
-  chainsRow: {
-    flexDirection: 'row',
-    gap: 8,
-    alignItems: 'center',
-  },
-  badge: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  badgeNum: {
-    fontSize: 18,
-    fontWeight: '800',
-  },
-});

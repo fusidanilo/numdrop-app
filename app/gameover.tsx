@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
@@ -9,8 +9,9 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import { useGameStore } from '../src/game/store/gameStore';
-import { COLORS, COLOR_ORDER } from '../src/game/config/colors';
+import { useGameStore } from '@/game/store/gameStore';
+import { COLORS, COLOR_ORDER } from '@/game/config/colors';
+import { styles } from '@/styles/gameOverScreen.styles';
 
 export default function GameOverScreen() {
   const router = useRouter();
@@ -81,13 +82,13 @@ export default function GameOverScreen() {
 
       <Animated.View style={[styles.buttons, btnsStyle]}>
         <Pressable
-          style={({ pressed }) => [styles.btnPrimary, pressed && { opacity: 0.75 }]}
+          style={({ pressed }) => [styles.btnPrimary, pressed && styles.btnPrimaryPressed]}
           onPress={handlePlayAgain}
         >
           <Text style={styles.btnPrimaryText}>Play Again</Text>
         </Pressable>
         <Pressable
-          style={({ pressed }) => [styles.btnSecondary, pressed && { opacity: 0.6 }]}
+          style={({ pressed }) => [styles.btnSecondary, pressed && styles.btnSecondaryPressed]}
           onPress={handleHome}
         >
           <Text style={styles.btnSecondaryText}>Home</Text>
@@ -96,110 +97,3 @@ export default function GameOverScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: '#FAF7F2',
-    paddingHorizontal: 28,
-    alignItems: 'center',
-  },
-  dotsRow: {
-    flexDirection: 'row',
-    gap: 10,
-    marginBottom: 24,
-  },
-  dot: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
-  },
-  gameOverTitle: {
-    fontSize: 42,
-    fontWeight: '800',
-    color: '#2E2E2E',
-    letterSpacing: -1.5,
-    textAlign: 'center',
-  },
-  scoreCard: {
-    marginTop: 32,
-    width: '100%',
-    backgroundColor: '#FFF',
-    borderRadius: 20,
-    padding: 28,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.07,
-    shadowRadius: 12,
-    elevation: 4,
-  },
-  scoreLabel: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#AAA',
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-  },
-  scoreValue: {
-    fontSize: 64,
-    fontWeight: '800',
-    color: '#2E2E2E',
-    letterSpacing: -3,
-    marginTop: 2,
-  },
-  newBest: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#A8D8C9',
-    marginTop: -4,
-    marginBottom: 4,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-  },
-  divider: {
-    width: 40,
-    height: 1,
-    backgroundColor: '#EEE',
-    marginVertical: 14,
-  },
-  bestLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#CCC',
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-  },
-  bestValue: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#AAA',
-    letterSpacing: -1,
-    marginTop: 2,
-  },
-  spacer: { flex: 1 },
-  buttons: {
-    width: '100%',
-    gap: 12,
-  },
-  btnPrimary: {
-    backgroundColor: '#3D3D3D',
-    paddingVertical: 18,
-    borderRadius: 16,
-    alignItems: 'center',
-  },
-  btnPrimaryText: {
-    fontSize: 17,
-    fontWeight: '700',
-    color: '#FAF7F2',
-  },
-  btnSecondary: {
-    paddingVertical: 14,
-    alignItems: 'center',
-  },
-  btnSecondaryText: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#BBB',
-  },
-});

@@ -225,6 +225,7 @@ export default function GameScreen() {
           <View style={styles.menuInner}>
             <View style={[styles.menuCard, { maxHeight: height * 0.84 }]}>
               <Text style={styles.menuTitle}>Game Paused</Text>
+              <Text style={styles.menuSubtitle}>Take a breath - jump back in when ready.</Text>
               <Pressable
                 style={({ pressed }) => [
                   styles.menuBtn,

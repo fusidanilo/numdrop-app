@@ -1,0 +1,110 @@
+name: Mobile CI/CD
+
+on:
+  push:
+    branches:
+      - staging
+      - master
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: "Release channel"
+        type: choice
+        required: true
+        default: staging
+        options:
+          - staging
+          - production
+      platform:
+        description: "Target platform"
+        type: choice
+        required: true
+        default: all
+        options:
+          - all
+          - android
+          - ios
+
+env:
+  EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+concurrency:
+  group: mobile-cicd-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-submit:
+    name: Build and Submit
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [android, ios]
+    if: |
+      (
+        github.event_name == 'push' &&
+        (
+          (github.ref == 'refs/heads/staging' && (matrix.platform == 'android' || matrix.platform == 'ios')) ||
+          (github.ref == 'refs/heads/master' && (matrix.platform == 'android' || matrix.platform == 'ios'))
+        )
+      ) ||
+      (
+        github.event_name == 'workflow_dispatch' &&
+        (
+          github.event.inputs.platform == 'all' ||
+          github.event.inputs.platform == matrix.platform
+        )
+      )
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Install EAS CLI
+        run: npm install -g eas-cli@latest
+
+      - name: Resolve EAS profiles from branch/input
+        id: profile
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            if [ "${{ github.ref }}" = "refs/heads/master" ]; then
+              echo "build_profile=production" >> "$GITHUB_OUTPUT"
+              echo "submit_profile=production" >> "$GITHUB_OUTPUT"
+              echo "channel=production" >> "$GITHUB_OUTPUT"
+            else
+              echo "build_profile=preview" >> "$GITHUB_OUTPUT"
+              echo "submit_profile=preview" >> "$GITHUB_OUTPUT"
+              echo "channel=staging" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            if [ "${{ github.event.inputs.channel }}" = "production" ]; then
+              echo "build_profile=production" >> "$GITHUB_OUTPUT"
+              echo "submit_profile=production" >> "$GITHUB_OUTPUT"
+              echo "channel=production" >> "$GITHUB_OUTPUT"
+            else
+              echo "build_profile=preview" >> "$GITHUB_OUTPUT"
+              echo "submit_profile=preview" >> "$GITHUB_OUTPUT"
+              echo "channel=staging" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+      - name: Verify EAS auth
+        run: eas whoami
+
+      - name: Build and auto-submit
+        run: |
+          eas build \
+            --non-interactive \
+            --platform "${{ matrix.platform }}" \
+            --profile "${{ steps.profile.outputs.build_profile }}" \
+            --auto-submit \
+            --submit-profile "${{ steps.profile.outputs.submit_profile }}"

@@ -4,6 +4,7 @@
     "slug": "numdrop",
     "version": "1.0.0",
     "orientation": "portrait",
+    "owner": "appuffy",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
@@ -15,7 +16,10 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.numdrop.app"
+      "bundleIdentifier": "com.numdrop.app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -30,6 +34,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "9e7fa9ec-ceec-47e3-94ec-132226662182"
+      }
     }
   }
 }

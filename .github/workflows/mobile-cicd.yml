@@ -42,20 +42,9 @@ jobs:
       matrix:
         platform: [android, ios]
     if: |
-      (
-        github.event_name == 'push' &&
-        (
-          (github.ref == 'refs/heads/staging' && (matrix.platform == 'android' || matrix.platform == 'ios')) ||
-          (github.ref == 'refs/heads/master' && (matrix.platform == 'android' || matrix.platform == 'ios'))
-        )
-      ) ||
-      (
-        github.event_name == 'workflow_dispatch' &&
-        (
-          github.event.inputs.platform == 'all' ||
-          github.event.inputs.platform == matrix.platform
-        )
-      )
+      github.event_name == 'workflow_dispatch' ||
+      github.ref == 'refs/heads/staging' ||
+      github.ref == 'refs/heads/master'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -98,9 +87,17 @@ jobs:
           fi
 
       - name: Verify EAS auth
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          github.event.inputs.platform == 'all' ||
+          github.event.inputs.platform == matrix.platform
         run: eas whoami
 
       - name: Build and auto-submit
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          github.event.inputs.platform == 'all' ||
+          github.event.inputs.platform == matrix.platform
         run: |
           eas build \
             --non-interactive \

@@ -67,21 +67,17 @@ jobs:
           if [ "${{ github.event_name }}" = "push" ]; then
             if [ "${{ github.ref }}" = "refs/heads/master" ]; then
               echo "build_profile=production" >> "$GITHUB_OUTPUT"
-              echo "submit_profile=production" >> "$GITHUB_OUTPUT"
               echo "channel=production" >> "$GITHUB_OUTPUT"
             else
               echo "build_profile=preview" >> "$GITHUB_OUTPUT"
-              echo "submit_profile=preview" >> "$GITHUB_OUTPUT"
               echo "channel=staging" >> "$GITHUB_OUTPUT"
             fi
           else
             if [ "${{ github.event.inputs.channel }}" = "production" ]; then
               echo "build_profile=production" >> "$GITHUB_OUTPUT"
-              echo "submit_profile=production" >> "$GITHUB_OUTPUT"
               echo "channel=production" >> "$GITHUB_OUTPUT"
             else
               echo "build_profile=preview" >> "$GITHUB_OUTPUT"
-              echo "submit_profile=preview" >> "$GITHUB_OUTPUT"
               echo "channel=staging" >> "$GITHUB_OUTPUT"
             fi
           fi
@@ -103,5 +99,4 @@ jobs:
             --non-interactive \
             --platform "${{ matrix.platform }}" \
             --profile "${{ steps.profile.outputs.build_profile }}" \
-            --auto-submit \
-            --auto-submit-with-profile "${{ steps.profile.outputs.submit_profile }}"
+            --auto-submit

@@ -108,9 +108,11 @@ jobs:
           path: ./android-${{ needs.resolve-profile.outputs.build_profile }}.aab
 
       - name: Android submit
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
         run: |
-          if [ -n "${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}" ]; then
-            printf '%s' "${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}" > /tmp/google-service-account.json
+          if [ -n "$GOOGLE_SERVICE_ACCOUNT_JSON" ]; then
+            printf '%s' "$GOOGLE_SERVICE_ACCOUNT_JSON" > /tmp/google-service-account.json
             eas submit \
               --platform android \
               --profile "${{ needs.resolve-profile.outputs.build_profile }}" \
@@ -170,4 +172,3 @@ jobs:
             --profile "${{ needs.resolve-profile.outputs.build_profile }}" \
             --path "./ios-${{ needs.resolve-profile.outputs.build_profile }}.ipa" \
             --non-interactive
-          fi

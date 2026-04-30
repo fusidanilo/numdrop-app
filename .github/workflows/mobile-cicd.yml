@@ -33,34 +33,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-and-submit:
-    name: Build and Submit
+  resolve-profile:
+    name: Resolve profile
     runs-on: ubuntu-latest
-    timeout-minutes: 45
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [android, ios]
-    if: |
-      github.event_name == 'workflow_dispatch' ||
-      github.ref == 'refs/heads/staging' ||
-      github.ref == 'refs/heads/master'
+    outputs:
+      build_profile: ${{ steps.profile.outputs.build_profile }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install EAS CLI
-        run: npm install -g eas-cli@latest
-
       - name: Resolve EAS profiles from branch/input
         id: profile
         run: |
@@ -78,44 +56,118 @@ jobs:
               echo "channel=production" >> "$GITHUB_OUTPUT"
             else
               echo "build_profile=preview" >> "$GITHUB_OUTPUT"
-              echo "channel=staging" >> "$GITHUB_OUTPUT"
             fi
           fi
 
+  android-build-submit:
+    name: Android local build + submit
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    needs: [resolve-profile]
+    if: |
+      (github.event_name == 'push' && (github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/master')) ||
+      (github.event_name == 'workflow_dispatch' && (github.event.inputs.platform == 'all' || github.event.inputs.platform == 'android'))
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install EAS CLI
+        run: npm install -g eas-cli@latest
+
       - name: Verify EAS auth
-        if: |
-          github.event_name != 'workflow_dispatch' ||
-          github.event.inputs.platform == 'all' ||
-          github.event.inputs.platform == matrix.platform
         run: eas whoami
 
-      - name: Build and auto-submit
-        if: |
-          github.event_name != 'workflow_dispatch' ||
-          github.event.inputs.platform == 'all' ||
-          github.event.inputs.platform == matrix.platform
+      - name: Android local build
         run: |
-          if [ "${{ matrix.platform }}" = "ios" ]; then
-            eas build \
-              --non-interactive \
-              --platform ios \
-              --profile "${{ steps.profile.outputs.build_profile }}" \
-              --auto-submit
-          else
-            eas build \
-              --non-interactive \
-              --platform android \
-              --profile "${{ steps.profile.outputs.build_profile }}"
+          eas build \
+            --platform android \
+            --profile "${{ needs.resolve-profile.outputs.build_profile }}" \
+            --local \
+            --non-interactive \
+            --output "./android-${{ needs.resolve-profile.outputs.build_profile }}.aab"
 
-            if [ -n "${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}" ]; then
-              printf '%s' "${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}" > /tmp/google-service-account.json
-              eas submit \
-                --non-interactive \
-                --platform android \
-                --latest \
-                --profile "${{ steps.profile.outputs.build_profile }}" \
-                --key /tmp/google-service-account.json
-            else
-              echo "::warning::GOOGLE_SERVICE_ACCOUNT_JSON non configurato. Build Android completata, submit saltato."
-            fi
+      - name: Upload Android artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-${{ needs.resolve-profile.outputs.build_profile }}
+          path: ./android-${{ needs.resolve-profile.outputs.build_profile }}.aab
+
+      - name: Android submit
+        run: |
+          if [ -n "${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}" ]; then
+            printf '%s' "${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}" > /tmp/google-service-account.json
+            eas submit \
+              --platform android \
+              --profile "${{ needs.resolve-profile.outputs.build_profile }}" \
+              --path "./android-${{ needs.resolve-profile.outputs.build_profile }}.aab" \
+              --key /tmp/google-service-account.json \
+              --non-interactive
+          else
+            echo "::warning::GOOGLE_SERVICE_ACCOUNT_JSON non configurato. Submit Android saltato."
+          fi
+
+  ios-build-submit:
+    name: iOS local build + submit
+    runs-on: macos-latest
+    timeout-minutes: 90
+    needs: [resolve-profile]
+    if: |
+      (github.event_name == 'push' && (github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/master')) ||
+      (github.event_name == 'workflow_dispatch' && (github.event.inputs.platform == 'all' || github.event.inputs.platform == 'ios'))
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install EAS CLI
+        run: npm install -g eas-cli@latest
+
+      - name: Verify EAS auth
+        run: eas whoami
+
+      - name: iOS local build
+        run: |
+          eas build \
+            --platform ios \
+            --profile "${{ needs.resolve-profile.outputs.build_profile }}" \
+            --local \
+            --non-interactive \
+            --output "./ios-${{ needs.resolve-profile.outputs.build_profile }}.ipa"
+
+      - name: Upload iOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-${{ needs.resolve-profile.outputs.build_profile }}
+          path: ./ios-${{ needs.resolve-profile.outputs.build_profile }}.ipa
+
+      - name: iOS submit
+        run: |
+          eas submit \
+            --platform ios \
+            --profile "${{ needs.resolve-profile.outputs.build_profile }}" \
+            --path "./ios-${{ needs.resolve-profile.outputs.build_profile }}.ipa" \
+            --non-interactive
           fi

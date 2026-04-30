@@ -117,7 +117,7 @@ jobs:
               --platform android \
               --profile "${{ needs.resolve-profile.outputs.build_profile }}" \
               --path "./android-${{ needs.resolve-profile.outputs.build_profile }}.aab" \
-              --key /tmp/google-service-account.json \
+              --service-account-key-path /tmp/google-service-account.json \
               --non-interactive
           else
             echo "::warning::GOOGLE_SERVICE_ACCOUNT_JSON non configurato. Submit Android saltato."
@@ -147,6 +147,19 @@ jobs:
       - name: Install EAS CLI
         run: npm install -g eas-cli@latest
 
+      - name: Setup latest stable Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Verify selected Xcode and iOS SDK
+        run: |
+          set -euo pipefail
+          echo "Current Xcode:"
+          xcodebuild -version
+          echo "Available iOS SDKs:"
+          xcodebuild -showsdks | grep -i iphoneos || true
+
       - name: Verify EAS auth
         run: eas whoami
 
@@ -170,13 +183,24 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           ASC_APP_ID: ${{ vars.ASC_APP_ID }}
         run: |
+          set -euo pipefail
           if [ -z "$APPLE_ID" ]; then
             echo "::error::Missing secret APPLE_ID for iOS submit."
             exit 1
           fi
 
+          if ! echo "$APPLE_ID" | rg -q '^[^@]+@[^@]+\.[^@]+$'; then
+            echo "::error::APPLE_ID must be a valid email."
+            exit 1
+          fi
+
           if [ -z "$ASC_APP_ID" ]; then
             echo "::error::Missing variable ASC_APP_ID for iOS submit."
+            exit 1
+          fi
+
+          if ! echo "$ASC_APP_ID" | rg -q '^[0-9]+$'; then
+            echo "::error::ASC_APP_ID must contain digits only."
             exit 1
           fi
 
@@ -188,9 +212,12 @@ jobs:
              eas.json > eas.json.tmp && mv eas.json.tmp eas.json
 
       - name: iOS submit
+        env:
+          EXPO_APPLE_ID: ${{ secrets.APPLE_ID }}
         run: |
           eas submit \
             --platform ios \
             --profile "${{ needs.resolve-profile.outputs.build_profile }}" \
             --path "./ios-${{ needs.resolve-profile.outputs.build_profile }}.ipa" \
             --non-interactive
+

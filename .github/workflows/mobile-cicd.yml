@@ -165,6 +165,28 @@ jobs:
           name: ios-${{ needs.resolve-profile.outputs.build_profile }}
           path: ./ios-${{ needs.resolve-profile.outputs.build_profile }}.ipa
 
+      - name: Inject iOS submit credentials
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          ASC_APP_ID: ${{ vars.ASC_APP_ID }}
+        run: |
+          if [ -z "$APPLE_ID" ]; then
+            echo "::error::Missing secret APPLE_ID for iOS submit."
+            exit 1
+          fi
+
+          if [ -z "$ASC_APP_ID" ]; then
+            echo "::error::Missing variable ASC_APP_ID for iOS submit."
+            exit 1
+          fi
+
+          jq --arg profile "${{ needs.resolve-profile.outputs.build_profile }}" \
+             --arg apple_id "$APPLE_ID" \
+             --arg asc_app_id "$ASC_APP_ID" \
+             '.submit[$profile].ios.appleId = $apple_id |
+              .submit[$profile].ios.ascAppId = $asc_app_id' \
+             eas.json > eas.json.tmp && mv eas.json.tmp eas.json
+
       - name: iOS submit
         run: |
           eas submit \

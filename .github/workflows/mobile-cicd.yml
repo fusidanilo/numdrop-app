@@ -95,8 +95,27 @@ jobs:
           github.event.inputs.platform == 'all' ||
           github.event.inputs.platform == matrix.platform
         run: |
-          eas build \
-            --non-interactive \
-            --platform "${{ matrix.platform }}" \
-            --profile "${{ steps.profile.outputs.build_profile }}" \
-            --auto-submit
+          if [ "${{ matrix.platform }}" = "ios" ]; then
+            eas build \
+              --non-interactive \
+              --platform ios \
+              --profile "${{ steps.profile.outputs.build_profile }}" \
+              --auto-submit
+          else
+            eas build \
+              --non-interactive \
+              --platform android \
+              --profile "${{ steps.profile.outputs.build_profile }}"
+
+            if [ -n "${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}" ]; then
+              printf '%s' "${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}" > /tmp/google-service-account.json
+              eas submit \
+                --non-interactive \
+                --platform android \
+                --latest \
+                --profile "${{ steps.profile.outputs.build_profile }}" \
+                --key /tmp/google-service-account.json
+            else
+              echo "::warning::GOOGLE_SERVICE_ACCOUNT_JSON non configurato. Build Android completata, submit saltato."
+            fi
+          fi

@@ -104,4 +104,4 @@ jobs:
             --platform "${{ matrix.platform }}" \
             --profile "${{ steps.profile.outputs.build_profile }}" \
             --auto-submit \
-            --submit-profile "${{ steps.profile.outputs.submit_profile }}"
+            --auto-submit-with-profile "${{ steps.profile.outputs.submit_profile }}"

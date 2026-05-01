@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -11,6 +11,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useGameStore } from '@/game/store/gameStore';
 import { COLORS, COLOR_ORDER } from '@/game/config/colors';
+import { getBannerAdUnitId, isGoogleMobileAdsAvailable } from '@/ads/adMob';
 import { styles } from '@/styles/gameOverScreen.styles';
 
 export default function GameOverScreen() {
@@ -94,6 +95,21 @@ export default function GameOverScreen() {
           <Text style={styles.btnSecondaryText}>Home</Text>
         </Pressable>
       </Animated.View>
+      <View style={styles.adWrap}>
+        <AdMobBanner />
+      </View>
     </View>
   );
+}
+
+function AdMobBanner() {
+  if (!isGoogleMobileAdsAvailable()) {
+    return null;
+  }
+
+  const adsModule = require('react-native-google-mobile-ads') as typeof import('react-native-google-mobile-ads');
+  const BannerAd = adsModule.BannerAd;
+  const bannerSize = adsModule.BannerAdSize.BANNER;
+
+  return <BannerAd unitId={getBannerAdUnitId()} size={bannerSize} />;
 }

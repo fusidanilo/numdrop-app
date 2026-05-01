@@ -3,20 +3,30 @@
   "version": "1.0.0",
   "main": "expo-router/entry",
   "private": true,
+  "engines": {
+    "node": ">=20 <22"
+  },
   "scripts": {
     "start": "expo start --go",
     "start:dev-client": "expo start --dev-client",
-    "android": "expo start --android --go",
-    "ios": "expo start --ios --go",
+    "android": "expo run:android --device",
+    "ios": "expo run:ios",
     "web": "expo start --web",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "native:clean": "rm -rf android ios .expo",
+    "native:regen": "npm run native:clean && npx expo prebuild --clean",
+    "build:dev:android:fresh": "npm run native:regen && eas build --local --profile development --platform android",
+    "build:dev:ios:fresh": "npm run native:regen && eas build --local --profile development --platform ios",
+    "build:dev": "eas build --local --profile development",
+    "build:dev:android": "eas build --local --profile development --platform android",
+    "build:dev:ios": "eas build --local --profile development --platform ios"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.23.1",
     "@shopify/react-native-skia": "1.5.0",
     "expo": "~52.0.46",
     "expo-av": "~15.0.2",
-    "expo-build-properties": "^55.0.13",
+    "expo-build-properties": "^0.13.3",
     "expo-constants": "~17.0.8",
     "expo-dev-client": "~5.0.20",
     "expo-haptics": "~14.0.1",
@@ -30,6 +40,7 @@
     "react-dom": "18.3.1",
     "react-native": "0.76.9",
     "react-native-gesture-handler": "~2.20.2",
+    "react-native-google-mobile-ads": "14.11.0",
     "react-native-reanimated": "~3.16.7",
     "react-native-safe-area-context": "4.12.0",
     "react-native-screens": "~4.4.0",

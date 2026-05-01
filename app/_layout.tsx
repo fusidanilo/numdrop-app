@@ -1,10 +1,20 @@
 import { Stack } from 'expo-router';
+import { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { isGoogleMobileAdsAvailable } from '@/ads/adMob';
 import { styles } from '@/styles/layout.styles';
 
 export default function RootLayout() {
+  useEffect(() => {
+    if (!isGoogleMobileAdsAvailable()) {
+      return;
+    }
+    const adsModule = require('react-native-google-mobile-ads') as typeof import('react-native-google-mobile-ads');
+    adsModule.default().initialize();
+  }, []);
+
   return (
     <GestureHandlerRootView style={styles.flex}>
       <SafeAreaProvider>

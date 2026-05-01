@@ -85,6 +85,13 @@ export const styles = StyleSheet.create({
     width: '100%',
     gap: 14,
   },
+  adWrap: {
+    marginTop: 16,
+    marginBottom: 4,
+    minHeight: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   btnPrimary: {
     width: '100%',
     minHeight: 56,

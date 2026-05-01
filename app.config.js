@@ -28,9 +28,27 @@ module.exports = ({ config }) => {
   ]);
   plugins.push("./plugins/withAndroidComposeKotlinCompat");
 
+  const androidVersionCode =
+    Number(process.env.ANDROID_VERSION_CODE) ||
+    Number(process.env.EAS_BUILD_ANDROID_VERSION_CODE) ||
+    2;
+
   return {
     ...baseConfig,
     newArchEnabled: false,
     plugins,
+    android: {
+      ...baseConfig.android,
+      // Play Console: must increase on every upload (default was 1).
+      versionCode: androidVersionCode,
+    },
+    ios: {
+      ...baseConfig.ios,
+      buildNumber: String(
+        process.env.IOS_BUILD_NUMBER ||
+          process.env.EAS_BUILD_IOS_BUILD_NUMBER ||
+          androidVersionCode,
+      ),
+    },
   };
 };

@@ -140,6 +140,23 @@ jobs:
           name: android-${{ needs.resolve-profile.outputs.build_profile }}
           path: .
 
+      - name: Inject Android submit credentials
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: |
+          set -euo pipefail
+          if [ -z "$GOOGLE_SERVICE_ACCOUNT_JSON" ]; then
+            echo "::error::Missing secret GOOGLE_SERVICE_ACCOUNT_JSON for Android submit."
+            exit 1
+          fi
+
+          printf '%s' "$GOOGLE_SERVICE_ACCOUNT_JSON" > /tmp/google-service-account.json
+
+          jq --arg profile "${{ needs.resolve-profile.outputs.build_profile }}" \
+             --arg key_path "/tmp/google-service-account.json" \
+             '.submit[$profile].android.serviceAccountKeyPath = $key_path' \
+             eas.json > eas.json.tmp && mv eas.json.tmp eas.json
+
       - name: Android submit
         run: |
           eas submit \

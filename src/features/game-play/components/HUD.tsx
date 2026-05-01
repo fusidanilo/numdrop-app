@@ -10,9 +10,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useGameStore } from '@/game/store/gameStore';
 import { COLORS, COLOR_ORDER } from '@/game/config/colors';
 import type { ColorId } from '@/game/config/colors';
-import { styles, tierDotColors } from '@/styles/HUD.styles';
-
-// ─── Score flash ────────────────────────────────────────────────────────────
+import { styles, tierDotColors } from '@/features/game-play/styles/hud.styles';
 
 function ScoreDisplay() {
   const score = useGameStore((s) => s.score);
@@ -42,8 +40,6 @@ function ScoreDisplay() {
   );
 }
 
-// ─── Lives (hearts) ─────────────────────────────────────────────────────────
-
 function Lives() {
   const lives = useGameStore((s) => s.lives);
   return (
@@ -56,8 +52,6 @@ function Lives() {
     </View>
   );
 }
-
-// ─── Colour chain counters ───────────────────────────────────────────────────
 
 function ChainBadge({ colorId }: { colorId: ColorId }) {
   const next = useGameStore((s) => s.nextByColor[colorId]);
@@ -91,26 +85,28 @@ function ChainBadge({ colorId }: { colorId: ColorId }) {
   );
 }
 
-// ─── Tier dots ──────────────────────────────────────────────────────────────
+const TIERS_PER_DOT_CYCLE = 7;
 
 function TierDots() {
   const tier = useGameStore((s) => s.tier);
+  const cyclePos = tier % TIERS_PER_DOT_CYCLE;
+  const phase = Math.floor(tier / TIERS_PER_DOT_CYCLE);
+
   return (
     <View style={styles.tierDotsRow}>
-      {[0, 1, 2, 3].map((i) => (
+      {Array.from({ length: TIERS_PER_DOT_CYCLE }, (_, i) => (
         <View
           key={i}
           style={[
             styles.tierDot,
-            { backgroundColor: i <= tier ? tierDotColors.active : tierDotColors.inactive },
+            { backgroundColor: i <= cyclePos ? tierDotColors.active : tierDotColors.inactive },
           ]}
         />
       ))}
+      {phase > 0 && <Text style={styles.phaseLabel}>×{phase + 1}</Text>}
     </View>
   );
 }
-
-// ─── Main HUD ────────────────────────────────────────────────────────────────
 
 function HUDComponent() {
   const insets = useSafeAreaInsets();

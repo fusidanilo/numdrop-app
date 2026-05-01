@@ -12,6 +12,8 @@
  *      – spawning new tiles
  *      – tier progression (speed changes)
  *      – exit detection (via the withTiming finish callback)
+ *      – bomb midscreen detection
+ *      – active effect (freeze) + screen-clear bomb power-up
  *  • setTiles() is called only when tiles are ADDED or REMOVED, i.e. ~1x per
  *    second, not 60x per second.
  */
@@ -46,10 +48,12 @@ export function useGameLoop({
   screenWidth,
   screenHeight,
   onTilesChange,
+  onBombExplode,
 }: {
   screenWidth: number;
   screenHeight: number;
   onTilesChange: (tiles: TileData[]) => void;
+  onBombExplode?: () => void;
 }): UseGameLoopReturn {
   const tilesRef = useRef<TileData[]>([]);
   const yAnimsRef = useRef<Map<string, SharedValue<number>>>(new Map());
@@ -59,6 +63,8 @@ export function useGameLoop({
   const animationsPausedRef = useRef(false);
   const lastSpawnRef = useRef(0);
   const prevTierRef = useRef(-1);
+  const prevEffectiveFallRef = useRef(0);
+  const prevClearBoardNonceRef = useRef(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const EXIT_Y = screenHeight + TILE_RADIUS;
@@ -75,7 +81,8 @@ export function useGameLoop({
   const handleTileExit = useCallback(
     (id: string, colorId: string, num: number) => {
       const { nextByColor, loseLife, isPaused } = useGameStore.getState();
-      if (!isPaused && num === nextByColor[colorId as ColorId]) {
+      // Bonus tiles (num === 0) never cost a life; bomb tiles are handled earlier
+      if (!isPaused && num !== 0 && num === nextByColor[colorId as ColorId]) {
         loseLife(colorId as ColorId);
       }
       yAnimsRef.current.delete(id);
@@ -100,7 +107,6 @@ export function useGameLoop({
       const num = tile.num;
       const onExit = handleTileExit;
 
-      // This runs entirely on the UI thread. The callback fires once when done.
       yAnim.value = withTiming(EXIT_Y, { duration, easing: Easing.linear }, (finished) => {
         'worklet';
         if (finished) runOnJS(onExit)(tileId, colorId, num);
@@ -109,7 +115,7 @@ export function useGameLoop({
     [EXIT_Y, handleTileExit],
   );
 
-  // ── Restart animations with updated speed on tier change ─────────────────
+  // ── Restart animations with updated speed on tier change or effect ────────
   const updateFallSpeeds = useCallback(
     (newFallDuration: number) => {
       for (const tile of tilesRef.current) {
@@ -210,6 +216,8 @@ export function useGameLoop({
     tilesRef.current = [];
     onTilesChange([]);
     prevTierRef.current = -1;
+    prevEffectiveFallRef.current = 0;
+    prevClearBoardNonceRef.current = useGameStore.getState().clearBoardNonce;
 
     const now = Date.now();
     startTimeRef.current = now;
@@ -220,7 +228,15 @@ export function useGameLoop({
 
     intervalRef.current = setInterval(() => {
       const ts = Date.now();
-      const { setTier, status: currentStatus, isPaused } = useGameStore.getState();
+      const {
+        setTier,
+        setTierMetrics,
+        clearActiveEffect,
+        loseLife,
+        status: currentStatus,
+        isPaused,
+        activeEffect,
+      } = useGameStore.getState();
 
       if (currentStatus !== 'playing') return;
 
@@ -244,27 +260,75 @@ export function useGameLoop({
       const tierIdx = getTierIndex(elapsed);
       setTier(tierIdx);
       const cfg = getTierConfig(elapsed);
+      setTierMetrics(cfg.maxNum, cfg.basePoints);
+
+      // ── Bomba power-up: svuota il campo (nessuna vita/combo persi; animazioni annullate senza exit callback)
+      const clearTarget = useGameStore.getState().clearBoardNonce;
+      while (prevClearBoardNonceRef.current < clearTarget) {
+        prevClearBoardNonceRef.current++;
+        for (const a of yAnimsRef.current.values()) cancelAnimation(a);
+        yAnimsRef.current.clear();
+        tilesRef.current = [];
+        publishTiles();
+      }
+
+      // ── Freeze: quasi fermo + nessun nuovo spawn
+      let effectiveFallDuration = cfg.fallDuration;
+      let effectiveSpawnInterval = cfg.spawnInterval;
+      if (activeEffect?.type === 'freeze') {
+        const remaining = activeEffect.expiresAt - ts;
+        if (remaining > 0) {
+          effectiveFallDuration = cfg.fallDuration * 24;
+          effectiveSpawnInterval = Number.POSITIVE_INFINITY;
+        } else {
+          clearActiveEffect();
+        }
+      }
 
       if (animationsPausedRef.current) {
-        resumeFallingAnimations(cfg.fallDuration);
+        resumeFallingAnimations(effectiveFallDuration);
         animationsPausedRef.current = false;
       }
 
-      // Speed update when tier advances
-      if (tierIdx !== prevTierRef.current && prevTierRef.current !== -1) {
-        updateFallSpeeds(cfg.fallDuration);
+      // Update fall speeds when tier advances OR effect changes
+      const tierChanged = tierIdx !== prevTierRef.current && prevTierRef.current !== -1;
+      const effectChanged =
+        Math.abs(effectiveFallDuration - prevEffectiveFallRef.current) > 50;
+
+      if (tierChanged || effectChanged) {
+        updateFallSpeeds(effectiveFallDuration);
       }
       prevTierRef.current = tierIdx;
+      prevEffectiveFallRef.current = effectiveFallDuration;
 
-      // Spawn a new tile
-      if (ts - lastSpawnRef.current >= cfg.spawnInterval) {
+      // ── Bomb tiles: explode when they cross mid-screen ────────────────────
+      const midY = screenHeight * 0.52; // slightly past centre
+      for (const tile of [...tilesRef.current]) {
+        if (tile.kind !== 'bomb' || tile.status !== 'falling') continue;
+        const yAnim = yAnimsRef.current.get(tile.id);
+        if (!yAnim || yAnim.value < midY) continue;
+
+        // Cancel animation so the withTiming exit callback doesn't fire
+        cancelAnimation(yAnim);
+        // Mark 'hit' so the Tile component plays its pop-out animation,
+        // which calls onRemove → removeTile for final cleanup
+        tilesRef.current = tilesRef.current.map((t) =>
+          t.id === tile.id ? { ...t, status: 'hit' } : t,
+        );
+        publishTiles();
+        loseLife(tile.colorId);
+        onBombExplode?.();
+      }
+
+      // ── Spawn a new tile ──────────────────────────────────────────────────
+      if (ts - lastSpawnRef.current >= effectiveSpawnInterval) {
         const fresh = spawnTile(
           useGameStore.getState().nextByColor,
-          cfg.numColors,
+          cfg,
           screenWidth,
           TILE_RADIUS,
         );
-        startFallAnim(fresh, cfg.fallDuration);
+        startFallAnim(fresh, effectiveFallDuration);
         tilesRef.current = [...tilesRef.current, fresh];
         publishTiles();
         lastSpawnRef.current = ts;
@@ -297,7 +361,6 @@ export function useGameLoop({
 
   const markTile = useCallback(
     (id: string, tileStatus: TileData['status']) => {
-      // Cancel fall anim for 'hit' so the withTiming callback doesn't fire
       if (tileStatus === 'hit') {
         const a = yAnimsRef.current.get(id);
         if (a) cancelAnimation(a);

@@ -1,18 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withDelay,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { useGameStore } from '@/game/store/gameStore';
 import { COLORS, COLOR_ORDER } from '@/game/config/colors';
 import { getBannerAdUnitId, isGoogleMobileAdsAvailable } from '@/ads/adMob';
-import { styles } from '@/styles/gameOverScreen.styles';
+import { useGameOverEntryAnimations } from '@/features/game-over/hooks/useGameOverEntryAnimations';
+import { styles } from '@/features/game-over/styles/gameOver.styles';
 
 export default function GameOverScreen() {
   const router = useRouter();
@@ -22,25 +17,7 @@ export default function GameOverScreen() {
   const startGame = useGameStore((s) => s.startGame);
   const isNewBest = score > 0 && score >= highScore;
 
-  // Entry animations
-  const titleScale = useSharedValue(0.6);
-  const titleOpacity = useSharedValue(0);
-  const scoreOpacity = useSharedValue(0);
-  const btnsOpacity = useSharedValue(0);
-
-  useEffect(() => {
-    titleScale.value = withSpring(1, { damping: 14, stiffness: 160 });
-    titleOpacity.value = withTiming(1, { duration: 300 });
-    scoreOpacity.value = withDelay(200, withTiming(1, { duration: 350 }));
-    btnsOpacity.value = withDelay(400, withTiming(1, { duration: 350 }));
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const titleStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: titleScale.value }],
-    opacity: titleOpacity.value,
-  }));
-  const scoreStyle = useAnimatedStyle(() => ({ opacity: scoreOpacity.value }));
-  const btnsStyle = useAnimatedStyle(() => ({ opacity: btnsOpacity.value }));
+  const { titleStyle, scoreStyle, btnsStyle } = useGameOverEntryAnimations();
 
   const handlePlayAgain = () => {
     startGame();
@@ -59,11 +36,13 @@ export default function GameOverScreen() {
         { paddingTop: insets.top + 40, paddingBottom: insets.bottom + 32 },
       ]}
     >
-      {/* Colour dots decoration */}
       <View style={styles.dotsRow}>
-        {COLOR_ORDER.map((c) => (
-          <View key={c} style={[styles.dot, { backgroundColor: COLORS[c].tile }]} />
-        ))}
+        {COLOR_ORDER.map((c) =>
+          React.createElement(View, {
+            key: c,
+            style: [styles.dot, { backgroundColor: COLORS[c].tile }],
+          }),
+        )}
       </View>
 
       <Animated.Text style={[styles.gameOverTitle, titleStyle]}>

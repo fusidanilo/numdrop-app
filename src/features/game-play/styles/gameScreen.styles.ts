@@ -103,7 +103,7 @@ export const styles = StyleSheet.create({
     backgroundColor: 'rgba(20,20,20,0.46)',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 60
+    zIndex: 60,
   },
   menuInner: {
     width: '100%',
@@ -188,5 +188,40 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#8A8A8A',
     textDecorationLine: 'underline',
+  },
+  readyScreenRoot: {
+    flex: 1,
+    backgroundColor: '#FAF7F2',
+    paddingHorizontal: 22,
+  },
+  readyCenterColumn: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: 0,
+  },
+  readyCenterBundle: {
+    width: '100%',
+    maxWidth: 400,
+    alignSelf: 'center',
+    flexShrink: 0,
+  },
+  readyTitle: {
+    alignSelf: 'center',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  readyTipsPager: {
+    width: '100%',
+    paddingVertical: 2,
+  },
+  readyFooterActions: {
+    flexShrink: 0,
+    gap: 10,
+    paddingTop: 8,
+    width: '100%',
+    maxWidth: 400,
+    alignSelf: 'center',
   },
 });

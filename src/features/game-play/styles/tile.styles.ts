@@ -26,4 +26,13 @@ export const styles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: -0.5,
   },
+  kindBadge: {
+    position: 'absolute',
+    bottom: 2,
+    right: 4,
+    fontSize: 9,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    lineHeight: 10,
+  },
 });

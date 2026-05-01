@@ -101,4 +101,11 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '800',
   },
+  phaseLabel: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#3D3D3D',
+    marginLeft: 4,
+    alignSelf: 'center',
+  },
 });

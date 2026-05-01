@@ -27,6 +27,9 @@ on:
 
 env:
   EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+  # false default: nasconde il toggle sandbox su Ready sulle build store-like.
+  # true/1: mostra il toggle pre-partita (QA); non attiva la sandbox finché l’utente non la accende (salvo FORCE nel codice).
+  EXPO_PUBLIC_DEV_GAME_MODE: ${{ vars.EXPO_PUBLIC_DEV_GAME_MODE || 'false' }}
 
 concurrency:
   group: mobile-cicd-${{ github.ref }}
@@ -91,6 +94,9 @@ jobs:
 
       - name: Verify EAS auth
         run: eas whoami
+
+      - name: Print Metro public env (sandbox)
+        run: echo "EXPO_PUBLIC_DEV_GAME_MODE=${EXPO_PUBLIC_DEV_GAME_MODE}"
 
       - name: Bump Android version code for CI
         run: |
@@ -213,6 +219,9 @@ jobs:
 
       - name: Verify EAS auth
         run: eas whoami
+
+      - name: Print Metro public env (sandbox)
+        run: echo "EXPO_PUBLIC_DEV_GAME_MODE=${EXPO_PUBLIC_DEV_GAME_MODE}"
 
       - name: Bump iOS build number for CI
         run: |

@@ -1,23 +1,18 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useGameStore } from '@/game/store/gameStore';
 import { COLORS, COLOR_ORDER } from '@/game/config/colors';
-import { loadHighScore } from '@/game/utils/storage';
-import { styles } from '@/styles/homeScreen.styles';
+import { useHydrateHighScore } from '@/features/home/hooks/useHydrateHighScore';
+import { styles } from '@/features/home/styles/home.styles';
 
 export default function HomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const highScore = useGameStore((s) => s.highScore);
-  const setHighScore = useGameStore((s) => s.setHighScore);
 
-  useEffect(() => {
-    loadHighScore().then((hs) => {
-      if (hs > 0) setHighScore(hs);
-    });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useHydrateHighScore();
 
   const handlePlay = () => {
     router.push('/game');
@@ -25,7 +20,6 @@ export default function HomeScreen() {
 
   return (
     <View style={[styles.root, { paddingTop: insets.top + 24, paddingBottom: insets.bottom + 24 }]}>
-      {/* Decorative tile hints */}
       <View style={styles.deco}>
         {COLOR_ORDER.map((c, i) => (
           <View
@@ -58,7 +52,6 @@ export default function HomeScreen() {
 
       <View style={styles.spacer} />
 
-      {/* How to play */}
       <View style={styles.howTo}>
         {[
           { dot: COLORS.salmon.tile, text: 'Each colour has its own count starting at 1' },

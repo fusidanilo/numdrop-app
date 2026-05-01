@@ -106,8 +106,10 @@ Inoltre, su Expo/EAS devono essere gia' configurate le credenziali:
 
 ## Struttura progetto (principale)
 
-- `app/` route e schermate (Expo Router)
-- `src/game/` logica di gioco (engine, config, store, utils)
+- `src/app/` route Expo Router (re-export verso le feature)
+- `src/features/<feature>/` con `screens/`, `styles/` (stessi livello), `hooks/` e `components/` dove serve
+- `src/game/` dominio di gioco (engine, config, store, utils) usato dalle feature
+- `src/styles/` stili condivisi (es. layout radice)
 - `assets/` immagini e asset statici
 - `eas.json` profili build/submit EAS
 - `.github/workflows/` pipeline CI/CD

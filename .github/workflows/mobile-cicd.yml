@@ -205,6 +205,15 @@ jobs:
       - name: Verify EAS auth
         run: eas whoami
 
+      - name: Bump iOS build number for CI
+        run: |
+          set -euo pipefail
+          IOS_BUILD_NUMBER="${{ github.run_number }}${{ github.run_attempt }}"
+          echo "Using iOS build number: $IOS_BUILD_NUMBER"
+          jq --arg build_number "$IOS_BUILD_NUMBER" \
+             '.expo.ios.buildNumber = $build_number' \
+             app.json > app.json.tmp && mv app.json.tmp app.json
+
       - name: iOS local build
         run: |
           eas build \

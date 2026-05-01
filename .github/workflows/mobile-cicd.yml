@@ -59,8 +59,8 @@ jobs:
             fi
           fi
 
-  android-build-submit:
-    name: Android local build + submit
+  android-build:
+    name: Android local build
     runs-on: ubuntu-latest
     timeout-minutes: 90
     needs: [resolve-profile]
@@ -107,24 +107,49 @@ jobs:
           name: android-${{ needs.resolve-profile.outputs.build_profile }}
           path: ./android-${{ needs.resolve-profile.outputs.build_profile }}.aab
 
-      - name: Android submit
-        env:
-          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
-        run: |
-          if [ -n "$GOOGLE_SERVICE_ACCOUNT_JSON" ]; then
-            printf '%s' "$GOOGLE_SERVICE_ACCOUNT_JSON" > /tmp/google-service-account.json
-            eas submit \
-              --platform android \
-              --profile "${{ needs.resolve-profile.outputs.build_profile }}" \
-              --path "./android-${{ needs.resolve-profile.outputs.build_profile }}.aab" \
-              --service-account-key-path /tmp/google-service-account.json \
-              --non-interactive
-          else
-            echo "::warning::GOOGLE_SERVICE_ACCOUNT_JSON non configurato. Submit Android saltato."
-          fi
+  android-submit:
+    name: Android submit
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    needs: [resolve-profile, android-build]
+    if: |
+      (github.event_name == 'push' && (github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/master')) ||
+      (github.event_name == 'workflow_dispatch' && (github.event.inputs.platform == 'all' || github.event.inputs.platform == 'android'))
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  ios-build-submit:
-    name: iOS local build + submit
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install EAS CLI
+        run: npm install -g eas-cli@latest
+
+      - name: Verify EAS auth
+        run: eas whoami
+
+      - name: Download Android artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: android-${{ needs.resolve-profile.outputs.build_profile }}
+          path: .
+
+      - name: Android submit
+        run: |
+          eas submit \
+            --platform android \
+            --profile "${{ needs.resolve-profile.outputs.build_profile }}" \
+            --path "./android-${{ needs.resolve-profile.outputs.build_profile }}.aab" \
+            --non-interactive
+
+  ios-build:
+    name: iOS local build
     runs-on: macos-latest
     timeout-minutes: 90
     needs: [resolve-profile]
@@ -178,6 +203,39 @@ jobs:
           name: ios-${{ needs.resolve-profile.outputs.build_profile }}
           path: ./ios-${{ needs.resolve-profile.outputs.build_profile }}.ipa
 
+  ios-submit:
+    name: iOS submit
+    runs-on: macos-latest
+    timeout-minutes: 45
+    needs: [resolve-profile, ios-build]
+    if: |
+      (github.event_name == 'push' && (github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/master')) ||
+      (github.event_name == 'workflow_dispatch' && (github.event.inputs.platform == 'all' || github.event.inputs.platform == 'ios'))
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install EAS CLI
+        run: npm install -g eas-cli@latest
+
+      - name: Verify EAS auth
+        run: eas whoami
+
+      - name: Download iOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ios-${{ needs.resolve-profile.outputs.build_profile }}
+          path: .
+
       - name: Inject iOS submit credentials
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
@@ -189,7 +247,7 @@ jobs:
             exit 1
           fi
 
-          if ! echo "$APPLE_ID" | rg -q '^[^@]+@[^@]+\.[^@]+$'; then
+          if ! echo "$APPLE_ID" | grep -Eq '^[^@]+@[^@]+\.[^@]+$'; then
             echo "::error::APPLE_ID must be a valid email."
             exit 1
           fi
@@ -199,7 +257,7 @@ jobs:
             exit 1
           fi
 
-          if ! echo "$ASC_APP_ID" | rg -q '^[0-9]+$'; then
+          if ! echo "$ASC_APP_ID" | grep -Eq '^[0-9]+$'; then
             echo "::error::ASC_APP_ID must contain digits only."
             exit 1
           fi

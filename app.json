@@ -26,7 +26,11 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FAF7F2"
       },
-      "package": "com.numdrop.app"
+      "package": "com.numdrop.app",
+      "blockedPermissions": [
+        "android.permission.ACTIVITY_RECOGNITION",
+        "com.google.android.gms.permission.ACTIVITY_RECOGNITION"
+      ]
     },
     "plugins": [
       "expo-dev-client",

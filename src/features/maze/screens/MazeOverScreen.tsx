@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, Text, Pressable } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
@@ -14,6 +15,7 @@ import { COLORS, COLOR_ORDER } from '@/game/config/colors';
 import { mazeOverStyles as styles } from '@/features/maze/styles/maze.styles';
 
 export default function MazeOverScreen() {
+  const { t } = useTranslation(['common', 'maze']);
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -80,24 +82,24 @@ export default function MazeOverScreen() {
         ))}
       </View>
 
-      <Animated.Text style={[styles.title, titleStyle]}>Path</Animated.Text>
-      <Animated.Text style={[styles.subtitle, titleStyle]}>Game over</Animated.Text>
+      <Animated.Text style={[styles.title, titleStyle]}>{t('pathOver.modeTitle')}</Animated.Text>
+      <Animated.Text style={[styles.subtitle, titleStyle]}>{t('pathOver.subtitle')}</Animated.Text>
 
       <Animated.View style={[styles.card, cardStyle]}>
-        <Text style={styles.cardLabel}>Score</Text>
+        <Text style={styles.cardLabel}>{t('score')}</Text>
         <Text style={styles.cardScore}>{score}</Text>
 
-        {isNewBest && <Text style={styles.newBest}>New best!</Text>}
+        {isNewBest && <Text style={styles.newBest}>{t('newBest')}</Text>}
 
         <View style={styles.divider} />
 
         <View style={styles.statsRow}>
           <View style={styles.statBlock}>
-            <Text style={styles.statLabel}>Best</Text>
+            <Text style={styles.statLabel}>{t('best')}</Text>
             <Text style={styles.statValue}>{highScore}</Text>
           </View>
           <View style={[styles.statBlock, styles.statRight]}>
-            <Text style={styles.statLabel}>Round</Text>
+            <Text style={styles.statLabel}>{t('round')}</Text>
             <Text style={styles.statValue}>{round}</Text>
           </View>
         </View>
@@ -110,14 +112,14 @@ export default function MazeOverScreen() {
           style={({ pressed }) => [styles.btnPrimary, pressed && styles.btnPrimaryPressed]}
           onPress={handlePlayAgain}
         >
-          <Text style={styles.btnPrimaryText}>Play again</Text>
+          <Text style={styles.btnPrimaryText}>{t('playAgainLower')}</Text>
         </Pressable>
 
         <Pressable
           style={({ pressed }) => [styles.btnSecondary, pressed && styles.btnSecondaryPressed]}
           onPress={handleHome}
         >
-          <Text style={styles.btnSecondaryText}>Home</Text>
+          <Text style={styles.btnSecondaryText}>{t('home')}</Text>
         </Pressable>
       </Animated.View>
     </View>

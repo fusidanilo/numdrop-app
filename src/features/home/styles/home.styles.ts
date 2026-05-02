@@ -7,26 +7,11 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 28,
     alignItems: 'center',
   },
-  deco: {
-    flexDirection: 'row',
-    marginBottom: 32,
-    alignItems: 'center',
-  },
-  decoTile: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  decoNum: {
-    fontSize: 26,
-    fontWeight: '800',
+  logo: {
+    width: 120,
+    height: 120,
+    marginBottom: 24,
+    resizeMode: 'contain',
   },
   title: {
     fontSize: 36,

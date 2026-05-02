@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { COLORS } from '@/game/config/colors';
 import type { MazeCell } from '@/features/maze/store/mazeStore';
+import { useTranslation } from 'react-i18next';
 import { mazeTargetStyles as styles } from '@/features/maze/styles/maze.styles';
 
 interface Props {
@@ -10,9 +11,10 @@ interface Props {
 }
 
 export function MazeTargetDisplay({ sequence, currentPathLength }: Props) {
+  const { t } = useTranslation('maze');
   return (
     <View style={styles.wrapper}>
-      <Text style={styles.label}>TRACE</Text>
+      <Text style={styles.label}>{t('trace')}</Text>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}

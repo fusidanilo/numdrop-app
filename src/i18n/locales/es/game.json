@@ -1,0 +1,53 @@
+{
+  "pause": {
+    "title": "Juego en pausa",
+    "subtitle": "Tómate un respiro — vuelve cuando quieras.",
+    "resume": "Reanudar",
+    "newGame": "Nueva partida",
+    "exitHome": "Salir al inicio"
+  },
+  "sandbox": {
+    "fullForced": "Sandbox (sin vidas, sin puntos · power-ups desde el inicio) — ON (código)",
+    "fullOn": "Sandbox (sin vidas, sin puntos · power-ups desde el inicio) — ON",
+    "fullOff": "Sandbox (sin vidas, sin puntos · power-ups desde el inicio) — OFF",
+    "hint": "Toca para activar o desactivar"
+  },
+  "dev": {
+    "sandboxRibbon": "SANDBOX"
+  },
+  "gameOver": {
+    "scoreLabel": "Puntuación",
+    "bestLabel": "Mejor"
+  },
+  "effect": {
+    "shield": "🛡️ ESCUDO · el siguiente toque es seguro",
+    "freeze": "❄️ CONGELAR · {{seconds}} s"
+  },
+  "tier": {
+    "level2": "Nivel 2",
+    "level3Color": "¡Nivel 3 — 3.er color!",
+    "maxSpeed": "¡Velocidad máxima!",
+    "ghost": "¡👻 Fichas fantasma!",
+    "double": "¡×2 Fichas dobles!",
+    "bomb": "¡💣 Fichas bomba!",
+    "cycleLevel": "Ciclo {{phase}} · Nivel {{pos}}"
+  },
+  "tipsClassic": [
+    {
+      "title": "Cómo jugar",
+      "body": "Caen fichas en tres colores. Empareja cada número con la insignia pequeña de ese color arriba a la derecha — las cadenas van de 1 → 9 → 1."
+    },
+    {
+      "title": "Toques erróneos",
+      "body": "Tocar el número equivocado reinicia la cadena de ese color a 1 y el combo vuelve a ×1."
+    },
+    {
+      "title": "Vidas",
+      "body": "Si la ficha con el siguiente número de tu color llega abajo sin tocarla, pierdes un corazón. Otros números pueden salir sin penalización."
+    },
+    {
+      "title": "Combo y power-ups",
+      "body": "Cada acierto sube el combo para más puntos. Cada 10 aciertos seguidos da un power-up — toca los iconos abajo cuando los necesites."
+    }
+  ]
+}

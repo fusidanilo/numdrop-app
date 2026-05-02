@@ -8,6 +8,7 @@ import Animated, {
   withSequence,
   Easing,
 } from 'react-native-reanimated';
+import { useTranslation } from 'react-i18next';
 import { mazeHudStyles as styles } from '@/features/maze/styles/maze.styles';
 
 interface Props {
@@ -21,6 +22,7 @@ interface Props {
 const LOW_TIME_THRESHOLD = 10_000;
 
 export function MazeHUD({ score, round, timeLeft, totalTime, streak }: Props) {
+  const { t } = useTranslation('maze');
   const progress = Math.max(0, timeLeft / totalTime);
   const isLow = timeLeft <= LOW_TIME_THRESHOLD;
   const seconds = Math.ceil(timeLeft / 1000);
@@ -59,18 +61,20 @@ export function MazeHUD({ score, round, timeLeft, totalTime, streak }: Props) {
       {/* Top row: score / round / streak */}
       <View style={styles.topRow}>
         <View style={styles.metricBlock}>
-          <Text style={styles.metricLabel}>SCORE</Text>
+          <Text style={styles.metricLabel}>{t('hudScore')}</Text>
           <Text style={styles.metricValue}>{score}</Text>
         </View>
 
         <View style={[styles.metricBlock, styles.metricCenter]}>
-          <Text style={styles.metricLabel}>ROUND</Text>
+          <Text style={styles.metricLabel}>{t('hudRound')}</Text>
           <Text style={styles.metricValue}>{round}</Text>
         </View>
 
         <View style={[styles.metricBlock, styles.metricRight]}>
-          <Text style={styles.metricLabel}>STREAK</Text>
-          <Text style={styles.metricValue}>{streak > 0 ? `×${streak}` : '—'}</Text>
+          <Text style={styles.metricLabel}>{t('hudStreak')}</Text>
+          <Text style={styles.metricValue}>
+            {streak > 0 ? `×${streak}` : t('streakEmpty')}
+          </Text>
         </View>
       </View>
 

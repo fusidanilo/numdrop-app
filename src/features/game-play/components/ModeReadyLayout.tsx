@@ -1,5 +1,6 @@
 import React, { type ReactNode } from 'react';
 import { View, Text, Pressable } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import type { HowToPlayTip } from '@/game/config/howToPlayTips';
 import { HowToPlayTipsPager } from '@/features/game-play/components/HowToPlayTipsPager';
 import { styles } from '@/features/game-play/styles/gameScreen.styles';
@@ -12,7 +13,7 @@ export interface ModeReadyLayoutProps {
   paddingBottom: number;
   paddingTop: number;
   tips: readonly HowToPlayTip[];
-  /** Defaults to "Ready?" — same heading for Classic and Path. */
+  /** Defaults to translated "Ready?" */
   title?: string;
 }
 
@@ -27,13 +28,16 @@ export function ModeReadyLayout({
   paddingBottom,
   paddingTop,
   tips,
-  title = 'Ready?',
+  title,
 }: ModeReadyLayoutProps) {
+  const { t } = useTranslation('common');
+  const heading = title ?? t('ready');
+
   return (
     <View style={[styles.readyScreenRoot, { paddingBottom, paddingTop }]}>
       <View style={styles.readyCenterColumn}>
         <View style={styles.readyCenterBundle}>
-          <Text style={[styles.overlayTitle, styles.readyTitle]}>{title}</Text>
+          <Text style={[styles.overlayTitle, styles.readyTitle]}>{heading}</Text>
           <HowToPlayTipsPager tips={tips} style={styles.readyTipsPager} />
         </View>
       </View>
@@ -43,13 +47,13 @@ export function ModeReadyLayout({
           style={({ pressed }) => [styles.startBtn, pressed && styles.startBtnPressed]}
           onPress={onStart}
         >
-          <Text style={styles.startBtnText}>Start</Text>
+          <Text style={styles.startBtnText}>{t('start')}</Text>
         </Pressable>
         <Pressable
           style={({ pressed }) => [styles.backBtn, pressed && styles.backBtnPressed]}
           onPress={onBack}
         >
-          <Text style={styles.backBtnText}>Back</Text>
+          <Text style={styles.backBtnText}>{t('back')}</Text>
         </Pressable>
       </View>
     </View>

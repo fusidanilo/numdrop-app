@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
@@ -10,6 +11,7 @@ import { useGameOverEntryAnimations } from '@/features/game-over/hooks/useGameOv
 import { styles } from '@/features/game-over/styles/gameOver.styles';
 
 export default function GameOverScreen() {
+  const { t } = useTranslation(['common', 'game']);
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const score = useGameStore((s) => s.score);
@@ -46,15 +48,15 @@ export default function GameOverScreen() {
       </View>
 
       <Animated.Text style={[styles.gameOverTitle, titleStyle]}>
-        Game Over
+        {t('gameOverTitle')}
       </Animated.Text>
 
       <Animated.View style={[styles.scoreCard, scoreStyle]}>
-        <Text style={styles.scoreLabel}>Score</Text>
+        <Text style={styles.scoreLabel}>{t('gameOver.scoreLabel')}</Text>
         <Text style={styles.scoreValue}>{score}</Text>
-        {isNewBest && <Text style={styles.newBest}>New best!</Text>}
+        {isNewBest && <Text style={styles.newBest}>{t('newBest')}</Text>}
         <View style={styles.divider} />
-        <Text style={styles.bestLabel}>Best</Text>
+        <Text style={styles.bestLabel}>{t('gameOver.bestLabel')}</Text>
         <Text style={styles.bestValue}>{highScore}</Text>
       </Animated.View>
 
@@ -65,13 +67,13 @@ export default function GameOverScreen() {
           style={({ pressed }) => [styles.btnPrimary, pressed && styles.btnPrimaryPressed]}
           onPress={handlePlayAgain}
         >
-          <Text style={styles.btnPrimaryText}>Play Again</Text>
+          <Text style={styles.btnPrimaryText}>{t('playAgain')}</Text>
         </Pressable>
         <Pressable
           style={({ pressed }) => [styles.btnSecondary, pressed && styles.btnSecondaryPressed]}
           onPress={handleHome}
         >
-          <Text style={styles.btnSecondaryText}>Home</Text>
+          <Text style={styles.btnSecondaryText}>{t('home')}</Text>
         </Pressable>
       </Animated.View>
       <View style={styles.adWrap}>

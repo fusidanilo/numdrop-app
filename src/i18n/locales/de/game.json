@@ -1,0 +1,53 @@
+{
+  "pause": {
+    "title": "Pausiert",
+    "subtitle": "Kurz durchatmen — weiter, wenn du soweit bist.",
+    "resume": "Weiter",
+    "newGame": "Neues Spiel",
+    "exitHome": "Zur Startseite"
+  },
+  "sandbox": {
+    "fullForced": "Sandbox (keine Leben, keine Punkte · Power-ups sofort) — AN (Code)",
+    "fullOn": "Sandbox (keine Leben, keine Punkte · Power-ups sofort) — AN",
+    "fullOff": "Sandbox (keine Leben, keine Punkte · Power-ups sofort) — AUS",
+    "hint": "Tippen zum Umschalten"
+  },
+  "dev": {
+    "sandboxRibbon": "SANDBOX"
+  },
+  "gameOver": {
+    "scoreLabel": "Punktzahl",
+    "bestLabel": "Bestwert"
+  },
+  "effect": {
+    "shield": "🛡️ SCHILD · nächster Treffer sicher",
+    "freeze": "❄️ FROST · {{seconds}} s"
+  },
+  "tier": {
+    "level2": "Level 2",
+    "level3Color": "Level 3 — 3. Farbe!",
+    "maxSpeed": "Höchstgeschwindigkeit!",
+    "ghost": "👻 Geister-Kacheln!",
+    "double": "×2 Doppel-Kacheln!",
+    "bomb": "💣 Bomben-Kacheln!",
+    "cycleLevel": "Zyklus {{phase}} · Level {{pos}}"
+  },
+  "tipsClassic": [
+    {
+      "title": "Spielanleitung",
+      "body": "Kacheln fallen in drei Farben. Ordne jede Zahl dem kleinen Badge dieser Farbe oben rechts zu — Ketten laufen 1 → 9 → 1."
+    },
+    {
+      "title": "Falsche Tipps",
+      "body": "Die falsche Zahl zu tippen setzt die Kette dieser Farbe auf 1 und den Combo-Multiplikator auf ×1 zurück."
+    },
+    {
+      "title": "Leben",
+      "body": "Erreicht die Kachel mit der nächsten Zahl deiner Farbe den Rand ohne Tipp, verlierst du ein Leben. Andere Zahlen können gefahrlos wegfallen."
+    },
+    {
+      "title": "Combo & Power-ups",
+      "body": "Jeder richtige Treffer erhöht den Combo für mehr Punkte. Alle 10 Treffer in Folge gibt ein Power-up — tippe unten auf die Symbole, wenn du sie brauchst."
+    }
+  ]
+}

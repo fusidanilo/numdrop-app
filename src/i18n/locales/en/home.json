@@ -1,0 +1,7 @@
+{
+  "chooseMode": "Choose a game mode",
+  "classicTitle": "Classic",
+  "classicDesc": "Falling tiles — tap the next number for each color before it leaves the screen.",
+  "pathTitle": "Path",
+  "pathDesc": "Trace the color-and-number sequence by dragging across the grid before time runs out."
+}

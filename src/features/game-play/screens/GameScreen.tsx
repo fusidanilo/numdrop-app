@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { View, Text, Pressable, useWindowDimensions } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
@@ -27,7 +28,7 @@ import {
   EFFECT_STATUS_BAR_TOP_OFFSET,
 } from '@/features/game-play/components/EffectStatusBar';
 import { ModeReadyLayout } from '@/features/game-play/components/ModeReadyLayout';
-import { HOW_TO_PLAY_TIPS } from '@/game/config/howToPlayTips';
+import type { HowToPlayTip } from '@/game/config/howToPlayTips';
 import { PowerUpBar } from '@/features/game-play/components/PowerUpBar';
 import { useAndroidGameBack } from '@/features/game-play/hooks/useAndroidGameBack';
 import { useGameFocusSession } from '@/features/game-play/hooks/useGameFocusSession';
@@ -38,9 +39,14 @@ import { styles } from '@/features/game-play/styles/gameScreen.styles';
 import { devOverlayStyles } from '@/features/game-play/styles/devOverlay.styles';
 
 export default function GameScreen() {
+  const { t, i18n } = useTranslation('game');
   const router = useRouter();
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
+  const classicTips = useMemo(
+    () => t('tipsClassic', { returnObjects: true }) as HowToPlayTip[],
+    [t, i18n.language],
+  );
   const [tiles, setTiles] = useState<TileData[]>([]);
   const [, setSandboxTick] = useState(0);
 
@@ -164,11 +170,10 @@ export default function GameScreen() {
               }}
             >
               <Text style={devOverlayStyles.sandboxLabel}>
-                Sandbox (no lives, no score · power-ups from the start)
-                {sandboxForced ? ' — ON (code)' : sandboxOn ? ' — ON' : ' — OFF'}
+                {sandboxForced ? t('sandbox.fullForced') : sandboxOn ? t('sandbox.fullOn') : t('sandbox.fullOff')}
               </Text>
               {!sandboxForced && (
-                <Text style={devOverlayStyles.sandboxHint}>Tap to toggle</Text>
+                <Text style={devOverlayStyles.sandboxHint}>{t('sandbox.hint')}</Text>
               )}
             </Pressable>
           ) : null
@@ -177,7 +182,7 @@ export default function GameScreen() {
         onStart={startGame}
         paddingBottom={insets.bottom + 12}
         paddingTop={insets.top + 10}
-        tips={HOW_TO_PLAY_TIPS}
+        tips={classicTips}
       />
     );
   }
@@ -198,8 +203,8 @@ export default function GameScreen() {
         >
           <View style={styles.menuInner}>
             <View style={[styles.menuCard, { maxHeight: height * 0.84 }]}>
-              <Text style={styles.menuTitle}>Game Paused</Text>
-              <Text style={styles.menuSubtitle}>Take a breath - jump back in when ready.</Text>
+              <Text style={styles.menuTitle}>{t('pause.title')}</Text>
+              <Text style={styles.menuSubtitle}>{t('pause.subtitle')}</Text>
               <Pressable
                 style={({ pressed }) => [
                   styles.menuBtn,
@@ -208,7 +213,7 @@ export default function GameScreen() {
                 ]}
                 onPress={resumeFromMenu}
               >
-                <Text style={styles.menuBtnPrimaryText}>Resume</Text>
+                <Text style={styles.menuBtnPrimaryText}>{t('pause.resume')}</Text>
               </Pressable>
               <Pressable
                 style={({ pressed }) => [
@@ -218,13 +223,13 @@ export default function GameScreen() {
                 ]}
                 onPress={restartFromMenu}
               >
-                <Text style={styles.menuBtnSecondaryText}>New Game</Text>
+                <Text style={styles.menuBtnSecondaryText}>{t('pause.newGame')}</Text>
               </Pressable>
               <Pressable
                 style={({ pressed }) => [styles.menuBtnGhost, pressed && styles.menuBtnGhostPressed]}
                 onPress={quitToHomeFromMenu}
               >
-                <Text style={styles.menuBtnGhostText}>Exit to Home</Text>
+                <Text style={styles.menuBtnGhostText}>{t('pause.exitHome')}</Text>
               </Pressable>
             </View>
           </View>
@@ -250,7 +255,7 @@ export default function GameScreen() {
       {isDevGameMode() && (
         <View style={devOverlayStyles.devRibbonWrap} pointerEvents="none">
           <View style={devOverlayStyles.devRibbon}>
-            <Text style={devOverlayStyles.devRibbonText}>SANDBOX</Text>
+            <Text style={devOverlayStyles.devRibbonText}>{t('dev.sandboxRibbon')}</Text>
           </View>
         </View>
       )}

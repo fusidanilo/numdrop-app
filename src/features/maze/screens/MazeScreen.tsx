@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, useWindowDimensions } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useMazeStore } from '@/features/maze/store/mazeStore';
@@ -8,7 +9,7 @@ import { MazeGrid } from '@/features/maze/components/MazeGrid';
 import { MazeHUD } from '@/features/maze/components/MazeHUD';
 import { MazeTargetDisplay } from '@/features/maze/components/MazeTargetDisplay';
 import { ModeReadyLayout } from '@/features/game-play/components/ModeReadyLayout';
-import { PATH_MODE_TIPS } from '@/game/config/pathHowToPlayTips';
+import type { HowToPlayTip } from '@/game/config/howToPlayTips';
 import {
   MAZE_HORIZONTAL_PADDING,
   MAZE_TOTAL_TIME_MS,
@@ -16,9 +17,15 @@ import {
 } from '@/features/maze/styles/maze.styles';
 
 export default function MazeScreen() {
+  const { t, i18n } = useTranslation('maze');
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
+
+  const pathTips = useMemo(
+    () => t('tipsPath', { returnObjects: true }) as HowToPlayTip[],
+    [t, i18n.language],
+  );
 
   const status = useMazeStore((s) => s.status);
   const score = useMazeStore((s) => s.score);
@@ -48,7 +55,7 @@ export default function MazeScreen() {
         onStart={handleStart}
         paddingBottom={insets.bottom + 12}
         paddingTop={insets.top + 10}
-        tips={PATH_MODE_TIPS}
+        tips={pathTips}
       />
     );
   }

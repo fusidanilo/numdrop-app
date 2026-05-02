@@ -1,0 +1,53 @@
+{
+  "pause": {
+    "title": "Gioco in pausa",
+    "subtitle": "Prenditi un attimo — torna quando sei pronto.",
+    "resume": "Riprendi",
+    "newGame": "Nuova partita",
+    "exitHome": "Esci alla home"
+  },
+  "sandbox": {
+    "fullForced": "Sandbox (niente vite, niente punti · power-up subito) — ON (codice)",
+    "fullOn": "Sandbox (niente vite, niente punti · power-up subito) — ON",
+    "fullOff": "Sandbox (niente vite, niente punti · power-up subito) — OFF",
+    "hint": "Tocca per attivare/disattivare"
+  },
+  "dev": {
+    "sandboxRibbon": "SANDBOX"
+  },
+  "gameOver": {
+    "scoreLabel": "Punteggio",
+    "bestLabel": "Migliore"
+  },
+  "effect": {
+    "shield": "🛡️ SCUDO · il prossimo colpo è sicuro",
+    "freeze": "❄️ GHIACCIO · {{seconds}}s"
+  },
+  "tier": {
+    "level2": "Livello 2",
+    "level3Color": "Livello 3 — 3° colore!",
+    "maxSpeed": "Velocità massima!",
+    "ghost": "👻 Tile fantasma!",
+    "double": "×2 Tile doppie!",
+    "bomb": "💣 Tile bomba!",
+    "cycleLevel": "Ciclo {{phase}} · Livello {{pos}}"
+  },
+  "tipsClassic": [
+    {
+      "title": "Come si gioca",
+      "body": "Cadono tile in tre colori. Abbina ogni numero con il badge piccolo di quel colore in alto a destra — le catene vanno da 1 → 9 → 1."
+    },
+    {
+      "title": "Tocchi sbagliati",
+      "body": "Toccare il numero sbagliato azzera la catena di quel colore a 1 e riporta il combo a ×1."
+    },
+    {
+      "title": "Vite",
+      "body": "Se il tile con il prossimo numero del tuo colore raggiunge il fondo senza essere toccato, perdi un cuore. Gli altri numeri possono uscire senza penalità."
+    },
+    {
+      "title": "Combo e power-up",
+      "body": "Ogni colpo giusto aumenta il combo per più punti. Ogni 10 colpi consecutivi dà un power-up — tocca le icone in basso quando ti servono."
+    }
+  ]
+}

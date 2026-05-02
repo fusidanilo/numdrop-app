@@ -1,0 +1,29 @@
+{
+  "hudScore": "PUNTEGGIO",
+  "hudRound": "ROUND",
+  "hudStreak": "SERIE",
+  "streakEmpty": "—",
+  "trace": "TRACCIA",
+  "pathOver": {
+    "modeTitle": "Percorso",
+    "subtitle": "Partita finita"
+  },
+  "tipsPath": [
+    {
+      "title": "Come si gioca",
+      "body": "Sopra la griglia compare la sequenza da seguire. Trascina sulle tile per collegarle nell'ordine esatto di colore e numero."
+    },
+    {
+      "title": "Passi adiacenti",
+      "body": "Ogni nuova tile deve essere accanto alla precedente in linea retta (su, giù, sinistra, destra). Non puoi riusare una tile nello stesso percorso."
+    },
+    {
+      "title": "Tempo",
+      "body": "Il tempo scende. Ogni round completato aggiunge secondi — completa le sequenze prima che arrivi a zero."
+    },
+    {
+      "title": "Punteggio e serie",
+      "body": "Sequenze più lunghe e serie moltiplicano i punti. Un percorso sbagliato azzera la serie, ma puoi riprovare subito."
+    }
+  ]
+}

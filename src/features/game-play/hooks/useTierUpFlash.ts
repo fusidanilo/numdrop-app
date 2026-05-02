@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   useSharedValue,
   useAnimatedStyle,
@@ -9,6 +10,7 @@ import { feedbackNewLevel } from '@/game/utils/sound';
 import { getTierLabel } from '@/features/game-play/tierLabels';
 
 export function useTierUpFlash(tier: number, gameSessionId: number) {
+  const { t, i18n } = useTranslation('game');
   const prevTierRef = useRef<number>(0);
   const [tierLabel, setTierLabel] = useState('');
   const tierFlashOpacity = useSharedValue(0);
@@ -24,7 +26,7 @@ export function useTierUpFlash(tier: number, gameSessionId: number) {
 
   useEffect(() => {
     if (tier > 0 && tier > prevTierRef.current) {
-      const label = getTierLabel(tier);
+      const label = getTierLabel(t, tier);
       if (label) {
         setTierLabel(label);
         feedbackNewLevel();
@@ -41,7 +43,7 @@ export function useTierUpFlash(tier: number, gameSessionId: number) {
       }
     }
     prevTierRef.current = tier;
-  }, [tier]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [t, i18n.language, tier]);
 
   return { tierLabel, tierFlashStyle };
 }

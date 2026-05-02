@@ -1,0 +1,29 @@
+{
+  "hudScore": "SCORE",
+  "hudRound": "ROUND",
+  "hudStreak": "STREAK",
+  "streakEmpty": "—",
+  "trace": "TRACE",
+  "pathOver": {
+    "modeTitle": "Path",
+    "subtitle": "Game over"
+  },
+  "tipsPath": [
+    {
+      "title": "How to play",
+      "body": "A target sequence appears above the grid. Drag across tiles to connect them in that exact color and number order."
+    },
+    {
+      "title": "Adjacent steps",
+      "body": "Each new tile must be orthogonally next to the previous one (up, down, left, or right). You cannot reuse a tile in the same path."
+    },
+    {
+      "title": "Time",
+      "body": "The clock counts down. Each round you complete adds time back — keep clearing sequences before it hits zero."
+    },
+    {
+      "title": "Score & streak",
+      "body": "Longer sequences and streaks multiply your points. A wrong path clears your streak but you can try again immediately."
+    }
+  ]
+}

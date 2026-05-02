@@ -10,20 +10,19 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
-import { HOW_TO_PLAY_TIPS, type HowToPlayTip } from '@/game/config/howToPlayTips';
+import type { HowToPlayTip } from '@/game/config/howToPlayTips';
 
 export interface HowToPlayTipsPagerProps {
   style?: StyleProp<ViewStyle>;
   /** Useful when the parent doesn't give a bounded width yet (e.g. flex layouts). */
   minHeight?: number;
-  /** Defaults to Classic mode tips. */
-  tips?: readonly HowToPlayTip[];
+  tips: readonly HowToPlayTip[];
 }
 
 export function HowToPlayTipsPager({
   style,
   minHeight = 0,
-  tips = HOW_TO_PLAY_TIPS,
+  tips,
 }: HowToPlayTipsPagerProps) {
   const [pageWidth, setPageWidth] = useState(0);
   const [pageIndex, setPageIndex] = useState(0);

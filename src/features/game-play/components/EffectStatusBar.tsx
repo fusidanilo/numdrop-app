@@ -1,5 +1,6 @@
 import React, { memo, useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { useGameStore } from '@/game/store/gameStore';
 import { effectBarStyles } from '@/features/game-play/styles/effectStatusBar.styles';
 
@@ -15,6 +16,7 @@ interface EffectStatusBarProps {
 }
 
 function EffectStatusBarComponent({ top }: EffectStatusBarProps) {
+  const { t } = useTranslation('game');
   const activeEffect = useGameStore((s) => s.activeEffect);
   const shieldActive = useGameStore((s) => s.shieldActive);
   const [, bump] = useState(0);
@@ -41,14 +43,14 @@ function EffectStatusBarComponent({ top }: EffectStatusBarProps) {
       {showShield && (
         <View style={[effectBarStyles.chip, { zIndex: 1, backgroundColor: '#E8EAF6' }]}>
           <Text style={[effectBarStyles.chipText, { color: '#3949AB' }]}>
-            🛡️ SHIELD · next hit safe
+            {t('effect.shield')}
           </Text>
         </View>
       )}
       {showFreeze && (
         <View style={[effectBarStyles.chip, { zIndex: 2, backgroundColor: '#B3E5FC' }]}>
           <Text style={[effectBarStyles.chipText, { color: '#01579B' }]}>
-            ❄️ FREEZE · {remainingSec}s
+            {t('effect.freeze', { seconds: remainingSec })}
           </Text>
         </View>
       )}

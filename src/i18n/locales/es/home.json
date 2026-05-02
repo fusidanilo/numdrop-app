@@ -1,0 +1,7 @@
+{
+  "chooseMode": "Elige un modo de juego",
+  "classicTitle": "Clásico",
+  "classicDesc": "Fichas que caen — toca el siguiente número de cada color antes de que salga de la pantalla.",
+  "pathTitle": "Camino",
+  "pathDesc": "Traza la secuencia de color y número arrastrando por la cuadrícula antes de que se acabe el tiempo."
+}

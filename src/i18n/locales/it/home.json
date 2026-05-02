@@ -1,0 +1,7 @@
+{
+  "chooseMode": "Scegli una modalità",
+  "classicTitle": "Classica",
+  "classicDesc": "Tile che cadono — tocca il numero successivo per ogni colore prima che esca dallo schermo.",
+  "pathTitle": "Percorso",
+  "pathDesc": "Traccia la sequenza di colori e numeri trascinando sulla griglia prima che finisca il tempo."
+}

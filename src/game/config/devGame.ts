@@ -1,14 +1,14 @@
 /**
- * Sandbox di sviluppo: nessuna perdita di vite / game over, punteggio non aumenta
- * (combo e catene si aggiornano normalmente per testare livelli e meccaniche).
- * Power-up: 3 cariche per tipo all’avvio in sandbox; nuovo drop ogni 5 hit consecutivi.
+ * Development sandbox: no real life loss / game over, score does not increase
+ * (combo and chains still update for testing tiers and mechanics).
+ * Power-ups: 3 charges per type at sandbox start; new drop every 5 consecutive hits.
  *
- * Toggle sulla schermata "Ready?" (prima della partita):
- * - Visibile se __DEV__, oppure EXPO_PUBLIC_DEV_GAME_MODE è truthy (1/true/yes), oppure FORCE_DEV_GAME_MODE.
- * - La variabile d’ambiente NON attiva da sola la sandbox in gioco: serve solo a mostrare il toggle su build non-debug (es. QA).
- * - Attiva la partita in sandbox: toggle ON prima di Start (sessione) e/o FORCE_DEV_GAME_MODE = true nel codice (blocca toggle).
+ * Toggle on the "Ready?" screen (before a run):
+ * - Visible if __DEV__, or EXPO_PUBLIC_DEV_GAME_MODE is truthy (1/true/yes), or FORCE_DEV_GAME_MODE.
+ * - The env var alone does not enable sandbox in-game: it only shows the toggle on non-debug builds (e.g. QA).
+ * - To play in sandbox: toggle ON before Start (session) and/or FORCE_DEV_GAME_MODE = true in code (locks toggle).
  *
- * CI: [.github/workflows/mobile-cicd.yml] passa EXPO_PUBLIC_DEV_GAME_MODE (default false).
+ * CI: [.github/workflows/mobile-cicd.yml] passes EXPO_PUBLIC_DEV_GAME_MODE (default false).
  */
 
 export const FORCE_DEV_GAME_MODE = false;
@@ -23,7 +23,7 @@ export function getSessionDevSandbox(): boolean {
   return sessionDevSandbox;
 }
 
-/** Variabile Expo pubblica truthy → può essere letta nel bundle (default fuori build = false). */
+/** Expo public env truthy → readable in the bundle (default outside build = false). */
 function expoPublicDevGameModeTruthy(): boolean {
   if (typeof process === 'undefined') return false;
   const raw = process.env.EXPO_PUBLIC_DEV_GAME_MODE;
@@ -33,14 +33,14 @@ function expoPublicDevGameModeTruthy(): boolean {
 }
 
 /**
- * Mostrare il blocco sandbox sulla schermata pre-partita (Ready).
- * Release senza env: nascosto; build QA con env=true: visibile.
+ * Show the sandbox block on the pre-game (Ready) screen.
+ * Release without env: hidden; QA build with env=true: visible.
  */
 export function showSandboxControlsOnReady(): boolean {
   return __DEV__ || FORCE_DEV_GAME_MODE || expoPublicDevGameModeTruthy();
 }
 
-/** Solo FORCE nel codice: sandbox sempre ON e toggle non modificabile. */
+/** FORCE in code only: sandbox always on and toggle not editable. */
 export function isSandboxForced(): boolean {
   return FORCE_DEV_GAME_MODE;
 }

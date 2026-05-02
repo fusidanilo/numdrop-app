@@ -26,7 +26,8 @@ import {
   EffectStatusBar,
   EFFECT_STATUS_BAR_TOP_OFFSET,
 } from '@/features/game-play/components/EffectStatusBar';
-import { HowToPlayTipsPager } from '@/features/game-play/components/HowToPlayTipsPager';
+import { ModeReadyLayout } from '@/features/game-play/components/ModeReadyLayout';
+import { HOW_TO_PLAY_TIPS } from '@/game/config/howToPlayTips';
 import { PowerUpBar } from '@/features/game-play/components/PowerUpBar';
 import { useAndroidGameBack } from '@/features/game-play/hooks/useAndroidGameBack';
 import { useGameFocusSession } from '@/features/game-play/hooks/useGameFocusSession';
@@ -147,20 +148,9 @@ export default function GameScreen() {
     const sandboxForced = isSandboxForced();
     const sandboxOn = isDevGameMode();
     return (
-      <View
-        style={[
-          styles.readyScreenRoot,
-          { paddingTop: insets.top + 10, paddingBottom: insets.bottom + 12 },
-        ]}
-      >
-        <View style={styles.readyCenterColumn}>
-          <View style={styles.readyCenterBundle}>
-            <Text style={[styles.overlayTitle, styles.readyTitle]}>Ready?</Text>
-            <HowToPlayTipsPager style={styles.readyTipsPager} />
-          </View>
-        </View>
-        <View style={styles.readyFooterActions}>
-          {showSandboxControlsOnReady() && (
+      <ModeReadyLayout
+        footerExtra={
+          showSandboxControlsOnReady() ? (
             <Pressable
               style={({ pressed }) => [
                 devOverlayStyles.sandboxRow,
@@ -174,28 +164,21 @@ export default function GameScreen() {
               }}
             >
               <Text style={devOverlayStyles.sandboxLabel}>
-                Sandbox (no vite, no punti · power-up da subito)
-                {sandboxForced ? ' — ON (codice)' : sandboxOn ? ' — ON' : ' — OFF'}
+                Sandbox (no lives, no score · power-ups from the start)
+                {sandboxForced ? ' — ON (code)' : sandboxOn ? ' — ON' : ' — OFF'}
               </Text>
               {!sandboxForced && (
-                <Text style={devOverlayStyles.sandboxHint}>Tocca per attivare/disattivare</Text>
+                <Text style={devOverlayStyles.sandboxHint}>Tap to toggle</Text>
               )}
             </Pressable>
-          )}
-          <Pressable
-            style={({ pressed }) => [styles.startBtn, pressed && styles.startBtnPressed]}
-            onPress={startGame}
-          >
-            <Text style={styles.startBtnText}>Start</Text>
-          </Pressable>
-          <Pressable
-            style={({ pressed }) => [styles.backBtn, pressed && styles.backBtnPressed]}
-            onPress={() => router.back()}
-          >
-            <Text style={styles.backBtnText}>← Back</Text>
-          </Pressable>
-        </View>
-      </View>
+          ) : null
+        }
+        onBack={() => router.back()}
+        onStart={startGame}
+        paddingBottom={insets.bottom + 12}
+        paddingTop={insets.top + 10}
+        tips={HOW_TO_PLAY_TIPS}
+      />
     );
   }
 

@@ -1,0 +1,181 @@
+import { create } from 'zustand';
+import type { ColorId } from '@/game/config/colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { generateGrid } from '@/features/maze/engine/gridGenerator';
+
+const MAZE_HIGH_SCORE_KEY = 'numdrop_maze_high_score';
+
+export type MazeStatus = 'idle' | 'playing' | 'over';
+export type PathStatus = 'idle' | 'tracing' | 'success' | 'fail';
+
+export interface MazeCell {
+  colorId: ColorId;
+  num: number;
+}
+
+export interface PathStep {
+  row: number;
+  col: number;
+}
+
+const INITIAL_TIME_MS = 60_000;
+
+interface MazeState {
+  status: MazeStatus;
+  grid: MazeCell[][];
+  targetSequence: MazeCell[];
+  currentPath: PathStep[];
+  pathStatus: PathStatus;
+  score: number;
+  highScore: number;
+  round: number;
+  timeLeft: number;
+  streak: number;
+
+  startGame: () => void;
+  beginRound: () => void;
+  startPath: (step: PathStep | null) => void;
+  extendPath: (step: PathStep | null) => void;
+  submitPath: () => void;
+  tick: (deltaMs: number) => void;
+  setTimeOver: () => void;
+  loadHighScore: () => Promise<void>;
+}
+
+function makeEmptyGrid(): MazeCell[][] {
+  return Array.from({ length: 4 }, () =>
+    Array.from({ length: 4 }, () => ({ colorId: 'salmon' as ColorId, num: 1 })),
+  );
+}
+
+export const useMazeStore = create<MazeState>((set, get) => ({
+  status: 'idle',
+  grid: makeEmptyGrid(),
+  targetSequence: [],
+  currentPath: [],
+  pathStatus: 'idle',
+  score: 0,
+  highScore: 0,
+  round: 0,
+  timeLeft: INITIAL_TIME_MS,
+  streak: 0,
+
+  startGame: () => {
+    const { grid, targetSequence } = generateGrid(1);
+    set({
+      status: 'playing',
+      grid,
+      targetSequence,
+      currentPath: [],
+      pathStatus: 'idle',
+      score: 0,
+      round: 1,
+      timeLeft: INITIAL_TIME_MS,
+      streak: 0,
+    });
+  },
+
+  beginRound: () => {
+    const nextRound = get().round + 1;
+    const { grid, targetSequence } = generateGrid(nextRound);
+    set({ round: nextRound, grid, targetSequence, currentPath: [], pathStatus: 'idle' });
+  },
+
+  startPath: (step) => {
+    if (get().pathStatus === 'success' || get().pathStatus === 'fail') return;
+    if (!step) return;
+    set({ currentPath: [step], pathStatus: 'tracing' });
+  },
+
+  extendPath: (step) => {
+    if (!step || get().pathStatus !== 'tracing') return;
+    const { currentPath } = get();
+    if (currentPath.length === 0) return;
+
+    const last = currentPath[currentPath.length - 1];
+    const dr = Math.abs(step.row - last.row);
+    const dc = Math.abs(step.col - last.col);
+    const isAdjacent = dr + dc === 1;
+    const alreadyInPath = currentPath.some((p) => p.row === step.row && p.col === step.col);
+
+    if (!isAdjacent || alreadyInPath) return;
+
+    set({ currentPath: [...currentPath, step] });
+  },
+
+  submitPath: () => {
+    const { currentPath, grid, targetSequence, score, highScore, streak } = get();
+
+    if (currentPath.length !== targetSequence.length) {
+      set({ currentPath: [], pathStatus: 'fail', streak: 0 });
+      setTimeout(() => set({ pathStatus: 'idle' }), 600);
+      return;
+    }
+
+    const matches = currentPath.every(
+      ({ row, col }, i) =>
+        grid[row][col].colorId === targetSequence[i].colorId &&
+        grid[row][col].num === targetSequence[i].num,
+    );
+
+    if (matches) {
+      const newStreak = streak + 1;
+      const bonusMultiplier = 1 + Math.floor(newStreak / 3) * 0.5;
+      const roundPoints = Math.round(targetSequence.length * 100 * bonusMultiplier);
+      const newScore = score + roundPoints;
+      const newHighScore = newScore > highScore ? newScore : highScore;
+
+      if (newScore > highScore) {
+        AsyncStorage.setItem(MAZE_HIGH_SCORE_KEY, String(newScore)).catch(() => {});
+      }
+
+      const timeBonus = targetSequence.length * 3_000;
+
+      set({
+        pathStatus: 'success',
+        score: newScore,
+        highScore: newHighScore,
+        streak: newStreak,
+        timeLeft: Math.min(get().timeLeft + timeBonus, INITIAL_TIME_MS),
+      });
+
+      setTimeout(() => {
+        get().beginRound();
+      }, 500);
+    } else {
+      set({ currentPath: [], pathStatus: 'fail', streak: 0 });
+      setTimeout(() => set({ pathStatus: 'idle' }), 600);
+    }
+  },
+
+  tick: (deltaMs) => {
+    const { timeLeft } = get();
+    const newTime = timeLeft - deltaMs;
+    if (newTime <= 0) {
+      get().setTimeOver();
+    } else {
+      set({ timeLeft: newTime });
+    }
+  },
+
+  setTimeOver: () => {
+    const { score, highScore } = get();
+    const newHighScore = score > highScore ? score : highScore;
+    if (score > highScore) {
+      AsyncStorage.setItem(MAZE_HIGH_SCORE_KEY, String(score)).catch(() => {});
+    }
+    set({ status: 'over', timeLeft: 0, highScore: newHighScore });
+  },
+
+  loadHighScore: async () => {
+    try {
+      const raw = await AsyncStorage.getItem(MAZE_HIGH_SCORE_KEY);
+      if (raw) {
+        const n = parseInt(raw, 10);
+        if (!Number.isNaN(n)) set({ highScore: n });
+      }
+    } catch {
+      // ignore
+    }
+  },
+}));

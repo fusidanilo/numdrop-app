@@ -21,11 +21,11 @@ export interface TierConfig {
  * (faster falls, shorter spawn gaps, lower maxNum, higher base points).
  */
 const BASE_TIERS: TierConfig[] = [
-  // Tier 0 — 0–30 s: 2 colours, gentle start
+  // Tier 0 — 0–30 s: 2 colors, gentle start
   { numColors: 2, maxNum: 9, fallDuration: 4200, spawnInterval: 1300, basePoints: 10, ghostTiles: false, doubleTiles: false, bombTiles: false },
-  // Tier 1 — 30–60 s: 2 colours, a bit faster
+  // Tier 1 — 30–60 s: 2 colors, a bit faster
   { numColors: 2, maxNum: 9, fallDuration: 3400, spawnInterval: 1050, basePoints: 10, ghostTiles: false, doubleTiles: false, bombTiles: false },
-  // Tier 2 — 60–120 s: 3rd colour enters
+  // Tier 2 — 60–120 s: 3rd color enters
   { numColors: 3, maxNum: 9, fallDuration: 2900, spawnInterval:  900, basePoints: 12, ghostTiles: false, doubleTiles: false, bombTiles: false },
   // Tier 3 — 120–180 s: speed ++
   { numColors: 3, maxNum: 9, fallDuration: 2300, spawnInterval:  740, basePoints: 15, ghostTiles: false, doubleTiles: false, bombTiles: false },

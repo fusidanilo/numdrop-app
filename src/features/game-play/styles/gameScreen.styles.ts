@@ -57,27 +57,22 @@ export const styles = StyleSheet.create({
     color: '#FAF7F2',
     letterSpacing: 0.35,
   },
+  /** Matches Path mode secondary action (text-only, no border). */
   backBtn: {
     marginTop: 4,
-    minHeight: 48,
-    paddingVertical: 12,
-    paddingHorizontal: 28,
-    borderRadius: 999,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(255,255,255,0.55)',
-    borderWidth: 1.5,
-    borderColor: '#D8D4CC',
+    alignSelf: 'center',
   },
   backBtnPressed: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    transform: [{ scale: 0.98 }],
+    opacity: 0.6,
   },
   backBtnText: {
     fontSize: 15,
-    color: '#6B6B6B',
     fontWeight: '600',
-    letterSpacing: 0.15,
+    color: '#999',
   },
   tierFlash: {
     position: 'absolute',

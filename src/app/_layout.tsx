@@ -23,6 +23,8 @@ export default function RootLayout() {
           <Stack.Screen name="index" />
           <Stack.Screen name="game" />
           <Stack.Screen name="gameover" />
+          <Stack.Screen name="maze" />
+          <Stack.Screen name="mazeover" />
         </Stack>
       </SafeAreaProvider>
     </GestureHandlerRootView>

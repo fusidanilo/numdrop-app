@@ -1,6 +1,6 @@
 const TIER_LABELS: Record<number, string> = {
   1: 'Level 2',
-  2: 'Level 3 — 3rd colour!',
+  2: 'Level 3 — 3rd color!',
   3: 'Max speed!',
   4: '👻 Ghost tiles!',
   5: '×2 Double tiles!',

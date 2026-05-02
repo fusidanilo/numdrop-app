@@ -10,15 +10,21 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
-import { HOW_TO_PLAY_TIPS } from '@/game/config/howToPlayTips';
+import { HOW_TO_PLAY_TIPS, type HowToPlayTip } from '@/game/config/howToPlayTips';
 
 export interface HowToPlayTipsPagerProps {
   style?: StyleProp<ViewStyle>;
   /** Useful when the parent doesn't give a bounded width yet (e.g. flex layouts). */
   minHeight?: number;
+  /** Defaults to Classic mode tips. */
+  tips?: readonly HowToPlayTip[];
 }
 
-export function HowToPlayTipsPager({ style, minHeight = 0 }: HowToPlayTipsPagerProps) {
+export function HowToPlayTipsPager({
+  style,
+  minHeight = 0,
+  tips = HOW_TO_PLAY_TIPS,
+}: HowToPlayTipsPagerProps) {
   const [pageWidth, setPageWidth] = useState(0);
   const [pageIndex, setPageIndex] = useState(0);
   const onLayout = useCallback((e: LayoutChangeEvent) => {
@@ -30,8 +36,8 @@ export function HowToPlayTipsPager({ style, minHeight = 0 }: HowToPlayTipsPagerP
     if (pageWidth <= 0) return;
     const x = e.nativeEvent.contentOffset.x;
     const i = Math.round(x / pageWidth);
-    setPageIndex(Math.max(0, Math.min(i, HOW_TO_PLAY_TIPS.length - 1)));
-  }, [pageWidth]);
+    setPageIndex(Math.max(0, Math.min(i, tips.length - 1)));
+  }, [pageWidth, tips.length]);
 
   return (
     <View style={[styles.outer, minHeight > 0 && { minHeight }, style]} onLayout={onLayout}>
@@ -46,7 +52,7 @@ export function HowToPlayTipsPager({ style, minHeight = 0 }: HowToPlayTipsPagerP
             style={{ width: pageWidth }}
             onMomentumScrollEnd={onMomentumEnd}
           >
-            {HOW_TO_PLAY_TIPS.map((tip) => (
+            {tips.map((tip) => (
               <View key={tip.title} style={[styles.page, { width: pageWidth }]}>
                 <View style={styles.card}>
                   <Text style={styles.tipTitle}>{tip.title}</Text>
@@ -56,7 +62,7 @@ export function HowToPlayTipsPager({ style, minHeight = 0 }: HowToPlayTipsPagerP
             ))}
           </ScrollView>
           <View style={styles.dots} accessibilityRole="tablist">
-            {HOW_TO_PLAY_TIPS.map((tip, i) => (
+            {tips.map((tip, i) => (
               <View
                 key={tip.title}
                 style={[styles.dot, i === pageIndex && styles.dotActive]}
@@ -66,7 +72,7 @@ export function HowToPlayTipsPager({ style, minHeight = 0 }: HowToPlayTipsPagerP
             ))}
           </View>
           <Text style={styles.pageHint} accessibilityLiveRegion="polite">
-            {pageIndex + 1} / {HOW_TO_PLAY_TIPS.length}
+            {pageIndex + 1} / {tips.length}
           </Text>
         </>
       )}

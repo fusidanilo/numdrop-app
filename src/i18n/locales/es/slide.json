@@ -1,0 +1,50 @@
+{
+  "slideReadyTitle": "Slide",
+  "startEndless": "Jugar",
+  "startFromCheckpoint": "Continuar desde el punto de control (tras la ronda {{last}})",
+  "hudTime": "TIEMPO",
+  "hudMoves": "MOVS",
+  "hudRound": "RONDA",
+  "hudMovesOf": "{{used}} / {{max}}",
+  "hudMovesLeft": "quedan {{count}}",
+  "hudCheckpointHint": "Siguiente en R{{next}} · cada {{every}}",
+  "slideOver": {
+    "modeTitle": "Slide",
+    "winSubtitle": "¡Ronda superada!",
+    "lostTitle": "Sin movimientos",
+    "lostSubtitle": "Has usado todos los movimientos permitidos en esta ronda.",
+    "lostHint": "Usa el reintento gratis o vuelve al último punto de control — en rondas altas hay menos movimientos.",
+    "lostHintAfterFree": "Ya usaste el reintento gratis. Mira un anuncio corto para un intento más en esta ronda, o reinicia desde el último punto de control.",
+    "lostHintFinal": "No quedan más intentos en esta ronda: reinicia desde el punto de control o vuelve al inicio.",
+    "retryRewarded": "Ver anuncio y reintentar",
+    "roundCleared": "Ronda {{round}}",
+    "roundFailed": "Ronda {{round}}",
+    "checkpointSaved": "Punto de control — ronda {{round}}",
+    "checkpointStatusNone": "El primer punto de control se guarda al terminar la ronda {{every}}.",
+    "checkpointStatusSaved": "Último punto de control: tras la ronda {{last}} (cada {{every}} rondas).",
+    "timeLabel": "Tiempo",
+    "movesLabel": "Movimientos",
+    "movesLimitLabel": "Movimientos usados",
+    "movesUsedOfMax": "{{used}} / {{max}}",
+    "nextRound": "Siguiente ronda",
+    "retryPuzzle": "Reintentar este puzzle",
+    "fromCheckpoint": "Reiniciar desde el punto de control",
+    "newRoundRecord": "¡Nuevo récord de rondas!",
+    "recordLabel": "MEJOR",
+    "recordBestRound": "ronda {{round}}"
+  },
+  "tipsSlide": [
+    {
+      "title": "Partida infinita",
+      "body": "Resuelve puzzles 3×3 seguidos. Cada ronda aprieta un poco el tiempo y el límite de movimientos."
+    },
+    {
+      "title": "Puntos de control",
+      "body": "Cada 5 rondas que completes se guarda un punto de control. Si sigues fallando tras el reintento gratis (y el opcional con anuncio), vuelves a la ronda siguiente al último control (o a la 1 si aún no hay)."
+    },
+    {
+      "title": "Reintento gratis",
+      "body": "La primera vez que fallas un puzzle puedes reintentar una vez con un nuevo barajado. Puedes conseguir un intento extra viendo un anuncio corto antes del punto de control."
+    }
+  ]
+}

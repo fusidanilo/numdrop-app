@@ -7,6 +7,22 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 28,
     alignItems: 'center',
   },
+  homeHeader: {
+    width: '100%',
+    alignItems: 'center',
+    flexShrink: 0,
+  },
+  modeScroll: {
+    flex: 1,
+    width: '100%',
+  },
+  modeScrollContent: {
+    flexGrow: 1,
+    width: '100%',
+    alignItems: 'center',
+    paddingTop: 4,
+    paddingBottom: 8,
+  },
   logo: {
     width: '100%',
     maxWidth: 300,
@@ -127,9 +143,8 @@ export const styles = StyleSheet.create({
 
   modeMenu: {
     width: '100%',
-    flex: 1,
-    justifyContent: 'center',
     gap: 12,
+    paddingTop: 8,
   },
   modeCard: {
     width: '100%',
@@ -171,6 +186,13 @@ export const styles = StyleSheet.create({
     color: '#AAA',
     letterSpacing: 0.8,
     textTransform: 'uppercase',
+  },
+  /** Slide card: “Best” in title case, not all-caps */
+  modeBestLabelPlain: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#AAA',
+    letterSpacing: 0.8,
   },
   modeBestValue: {
     fontSize: 18,

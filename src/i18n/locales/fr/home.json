@@ -5,5 +5,9 @@
   "pathTitle": "Parcours",
   "pathDesc": "Tracez la séquence couleur et nombre en glissant sur la grille avant la fin du temps.",
   "traceTitle": "Trace",
-  "traceDesc": "Couvrez la forme colorée d’un seul trait — chaque case mise en évidence une fois, sans chiffres."
+  "traceDesc": "Couvrez la forme colorée d'un seul trait — chaque case mise en évidence une fois, sans chiffres.",
+  "slideTitle": "Slide",
+  "slideDesc": "Puzzles 3×3 infinis — point de contrôle toutes les 5 manches et un nouvel essai gratuit par puzzle.",
+  "slideBest": "Meilleur",
+  "slideBestValue": "manche {{round}}"
 }

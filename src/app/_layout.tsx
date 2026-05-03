@@ -29,6 +29,8 @@ export default function RootLayout() {
           <Stack.Screen name="mazeover" />
           <Stack.Screen name="trace" />
           <Stack.Screen name="traceover" />
+          <Stack.Screen name="slide" />
+          <Stack.Screen name="slideover" />
         </Stack>
         <AppOpenAdsController />
       </SafeAreaProvider>

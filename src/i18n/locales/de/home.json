@@ -5,5 +5,9 @@
   "pathTitle": "Pfad",
   "pathDesc": "Verfolge die Farb- und Zahlenfolge durch Ziehen über das Raster, bevor die Zeit abläuft.",
   "traceTitle": "Trace",
-  "traceDesc": "Überdecke die farbige Figur in einem Zug — jedes hervorgehobene Feld einmal, ohne Zahlen."
+  "traceDesc": "Überdecke die farbige Figur in einem Zug — jedes hervorgehobene Feld einmal, ohne Zahlen.",
+  "slideTitle": "Slide",
+  "slideDesc": "Endlose 3×3-Puzzles — Checkpoint alle 5 Runden und ein kostenloser Retry pro Puzzle.",
+  "slideBest": "Best",
+  "slideBestValue": "runde {{round}}"
 }

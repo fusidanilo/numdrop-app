@@ -5,5 +5,9 @@
   "pathTitle": "Path",
   "pathDesc": "Trace the color-and-number sequence by dragging across the grid before time runs out.",
   "traceTitle": "Trace",
-  "traceDesc": "Cover the colored shape in one stroke — every highlighted cell once, no numbers."
+  "traceDesc": "Cover the colored shape in one stroke — every highlighted cell once, no numbers.",
+  "slideTitle": "Slide",
+  "slideDesc": "Endless 3×3 puzzles — checkpoints every 5 rounds and one free retry per puzzle.",
+  "slideBest": "Best",
+  "slideBestValue": "round {{round}}"
 }

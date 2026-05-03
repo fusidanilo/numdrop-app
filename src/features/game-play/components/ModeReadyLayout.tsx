@@ -15,6 +15,8 @@ export interface ModeReadyLayoutProps {
   tips: readonly HowToPlayTip[];
   /** Defaults to translated "Ready?" */
   title?: string;
+  /** Overrides the default Start button label when provided. */
+  startButtonLabel?: string;
 }
 
 /**
@@ -29,6 +31,7 @@ export function ModeReadyLayout({
   paddingTop,
   tips,
   title,
+  startButtonLabel,
 }: ModeReadyLayoutProps) {
   const { t } = useTranslation('common');
   const heading = title ?? t('ready');
@@ -47,7 +50,7 @@ export function ModeReadyLayout({
           style={({ pressed }) => [styles.startBtn, pressed && styles.startBtnPressed]}
           onPress={onStart}
         >
-          <Text style={styles.startBtnText}>{t('start')}</Text>
+          <Text style={styles.startBtnText}>{startButtonLabel ?? t('start')}</Text>
         </Pressable>
         <Pressable
           style={({ pressed }) => [styles.backBtn, pressed && styles.backBtnPressed]}

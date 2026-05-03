@@ -1,0 +1,50 @@
+{
+  "slideReadyTitle": "Slide",
+  "startEndless": "Play",
+  "startFromCheckpoint": "Resume from checkpoint (after round {{last}})",
+  "hudTime": "TIME",
+  "hudMoves": "MOVES",
+  "hudRound": "ROUND",
+  "hudMovesOf": "{{used}} / {{max}}",
+  "hudMovesLeft": "{{count}} left",
+  "hudCheckpointHint": "Next at round {{next}} · every {{every}}",
+  "slideOver": {
+    "modeTitle": "Slide",
+    "winSubtitle": "Round cleared!",
+    "lostTitle": "Out of moves",
+    "lostSubtitle": "You used every slide allowed for this round.",
+    "lostHint": "Use your free retry, or restart from the last checkpoint — higher rounds have tighter move limits.",
+    "lostHintAfterFree": "Your free retry is used up. Watch a short ad for one more try on this round, or restart from your last checkpoint.",
+    "lostHintFinal": "No more retries this round — restart from checkpoint or head home.",
+    "retryRewarded": "Watch ad & retry",
+    "roundCleared": "Round {{round}}",
+    "roundFailed": "Round {{round}}",
+    "checkpointSaved": "Checkpoint saved — round {{round}}",
+    "checkpointStatusNone": "First checkpoint after you finish round {{every}}.",
+    "checkpointStatusSaved": "Last checkpoint: after round {{last}} (every {{every}} rounds).",
+    "timeLabel": "Time",
+    "movesLabel": "Moves",
+    "movesLimitLabel": "Moves used",
+    "movesUsedOfMax": "{{used}} / {{max}}",
+    "nextRound": "Next round",
+    "retryPuzzle": "Retry this puzzle",
+    "fromCheckpoint": "Restart from checkpoint",
+    "newRoundRecord": "New best round!",
+    "recordLabel": "BEST",
+    "recordBestRound": "round {{round}}"
+  },
+  "tipsSlide": [
+    {
+      "title": "Endless run",
+      "body": "Solve 3×3 puzzles one after another. Each round gets a bit stricter on time and move budget."
+    },
+    {
+      "title": "Checkpoints",
+      "body": "Every 5 rounds you complete, a checkpoint is saved. If you still fail after your free retry (and any ad retry), you restart from the round right after your last checkpoint (or from round 1 if none yet)."
+    },
+    {
+      "title": "Free retry",
+      "body": "The first time you fail a puzzle in a round, you can retry once with a fresh shuffle. You may get one extra try by watching a short ad before using a checkpoint."
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "slideReadyTitle": "Slide",
+  "startEndless": "Gioca",
+  "startFromCheckpoint": "Riprendi dal checkpoint (dopo round {{last}})",
+  "hudTime": "TEMPO",
+  "hudMoves": "MOSSE",
+  "hudRound": "ROUND",
+  "hudMovesOf": "{{used}} / {{max}}",
+  "hudMovesLeft": "ancora {{count}}",
+  "hudCheckpointHint": "Prossimo al R{{next}} · ogni {{every}}",
+  "slideOver": {
+    "modeTitle": "Slide",
+    "winSubtitle": "Round completato!",
+    "lostTitle": "Mosse esaurite",
+    "lostSubtitle": "Hai usato tutte le mosse consentite per questo round.",
+    "lostHint": "Usa il retry gratuito, oppure riparti dall’ultimo checkpoint — ai round alti il limite mosse è più stretto.",
+    "lostHintAfterFree": "Hai già usato il retry gratuito. Guarda una breve pubblicità per un altro tentativo su questo round, oppure riparti dall’ultimo checkpoint.",
+    "lostHintFinal": "Non restano altri tentativi in questo round: riparti dal checkpoint o torna alla home.",
+    "retryRewarded": "Guarda una pubblicità e riprova",
+    "roundCleared": "Round {{round}}",
+    "roundFailed": "Round {{round}}",
+    "checkpointSaved": "Checkpoint salvato — round {{round}}",
+    "checkpointStatusNone": "Il primo checkpoint si salva dopo aver finito il round {{every}}.",
+    "checkpointStatusSaved": "Ultimo checkpoint: dopo il round {{last}} (ogni {{every}} round).",
+    "timeLabel": "Tempo",
+    "movesLabel": "Mosse",
+    "movesLimitLabel": "Mosse usate",
+    "movesUsedOfMax": "{{used}} / {{max}}",
+    "nextRound": "Round successivo",
+    "retryPuzzle": "Riprova questo puzzle",
+    "fromCheckpoint": "Riparti dal checkpoint",
+    "newRoundRecord": "Nuovo record di round!",
+    "recordLabel": "RECORD",
+    "recordBestRound": "round {{round}}"
+  },
+  "tipsSlide": [
+    {
+      "title": "Run infinita",
+      "body": "Risolvi puzzle 3×3 uno dopo l’altro. Ogni round stringe un po’ tempo e budget mosse."
+    },
+    {
+      "title": "Checkpoint",
+      "body": "Ogni 5 round che completi salvi un checkpoint. Se fallisci ancora dopo il retry gratuito (e l’eventuale tentativo con pubblicità), riparti dal round subito dopo l’ultimo checkpoint (o dal round 1 se non ne hai ancora)."
+    },
+    {
+      "title": "Retry gratuito",
+      "body": "La prima volta che fallisci un puzzle nel round puoi riprovare una volta con un nuovo mescolamento. Puoi ottenere un tentativo in più guardando una breve pubblicità prima del checkpoint."
+    }
+  ]
+}

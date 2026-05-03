@@ -1,0 +1,50 @@
+{
+  "slideReadyTitle": "Slide",
+  "startEndless": "Jouer",
+  "startFromCheckpoint": "Reprendre au point de contrôle (après la manche {{last}})",
+  "hudTime": "TEMPS",
+  "hudMoves": "COUPS",
+  "hudRound": "MANCHE",
+  "hudMovesOf": "{{used}} / {{max}}",
+  "hudMovesLeft": "encore {{count}}",
+  "hudCheckpointHint": "Prochain : R{{next}} · tous les {{every}}",
+  "slideOver": {
+    "modeTitle": "Slide",
+    "winSubtitle": "Manche réussie !",
+    "lostTitle": "Plus de coups",
+    "lostSubtitle": "Vous avez utilisé tous les coups autorisés pour cette manche.",
+    "lostHint": "Utilisez le nouvel essai gratuit, ou reprenez au dernier point de contrôle — les manches avancées ont moins de coups.",
+    "lostHintAfterFree": "Vous avez utilisé le nouvel essai gratuit. Regardez une courte publicité pour une dernière tentative sur cette manche, ou reprenez au dernier point de contrôle.",
+    "lostHintFinal": "Plus de tentatives sur cette manche : reprenez au point de contrôle ou revenez à l’accueil.",
+    "retryRewarded": "Voir une pub et réessayer",
+    "roundCleared": "Manche {{round}}",
+    "roundFailed": "Manche {{round}}",
+    "checkpointSaved": "Point de contrôle — manche {{round}}",
+    "checkpointStatusNone": "Premier point de contrôle après la manche {{every}}.",
+    "checkpointStatusSaved": "Dernier point de contrôle : après la manche {{last}} (tous les {{every}}).",
+    "timeLabel": "Temps",
+    "movesLabel": "Coups",
+    "movesLimitLabel": "Coups utilisés",
+    "movesUsedOfMax": "{{used}} / {{max}}",
+    "nextRound": "Manche suivante",
+    "retryPuzzle": "Réessayer ce puzzle",
+    "fromCheckpoint": "Reprendre au point de contrôle",
+    "newRoundRecord": "Nouveau record de manches !",
+    "recordLabel": "MEILLEUR",
+    "recordBestRound": "manche {{round}}"
+  },
+  "tipsSlide": [
+    {
+      "title": "Partie infinie",
+      "body": "Enchaînez des puzzles 3×3. Chaque manche resserre un peu le temps et le budget de coups."
+    },
+    {
+      "title": "Points de contrôle",
+      "body": "Toutes les 5 manches terminées, un point de contrôle est enregistré. Si vous échouez encore après le nouvel essai gratuit (et l’essai publicitaire éventuel), vous reprenez à la manche suivant le dernier point (ou à la manche 1 si aucun)."
+    },
+    {
+      "title": "Nouvel essai gratuit",
+      "body": "La première fois que vous échouez sur un puzzle, vous pouvez réessayer une fois avec un nouveau mélange. Une courte publicité peut offrir un essai de plus avant le point de contrôle."
+    }
+  ]
+}

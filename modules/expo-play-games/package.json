@@ -1,0 +1,12 @@
+{
+  "name": "expo-play-games",
+  "version": "1.0.0",
+  "description": "Google Play Games Services (Android). iOS exports no-op stubs.",
+  "main": "src/index.ts",
+  "license": "MIT",
+  "peerDependencies": {
+    "expo": "*",
+    "react": "*",
+    "react-native": "*"
+  }
+}

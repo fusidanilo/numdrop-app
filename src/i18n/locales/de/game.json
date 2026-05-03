@@ -17,7 +17,8 @@
   },
   "gameOver": {
     "scoreLabel": "Punktzahl",
-    "bestLabel": "Bestwert"
+    "bestLabel": "Bestwert",
+    "leaderboards": "Bestenlisten"
   },
   "effect": {
     "shield": "🛡️ SCHILD · nächster Treffer sicher",

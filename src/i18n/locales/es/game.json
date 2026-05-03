@@ -17,7 +17,8 @@
   },
   "gameOver": {
     "scoreLabel": "Puntuación",
-    "bestLabel": "Mejor"
+    "bestLabel": "Mejor",
+    "leaderboards": "Clasificaciones"
   },
   "effect": {
     "shield": "🛡️ ESCUDO · el siguiente toque es seguro",

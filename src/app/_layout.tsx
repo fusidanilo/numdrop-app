@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { isGoogleMobileAdsAvailable } from '@/ads/adMob';
+import { AppOpenAdsController } from '@/ads/AppOpenAdsController';
 import { styles } from '@/styles/layout.styles';
 
 export default function RootLayout() {
@@ -27,6 +28,7 @@ export default function RootLayout() {
           <Stack.Screen name="maze" />
           <Stack.Screen name="mazeover" />
         </Stack>
+        <AppOpenAdsController />
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

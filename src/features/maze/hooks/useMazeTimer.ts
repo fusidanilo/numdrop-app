@@ -6,12 +6,13 @@ const TICK_MS = 100;
 
 export function useMazeTimer() {
   const status = useMazeStore((s) => s.status);
+  const isPaused = useMazeStore((s) => s.isPaused);
   const tick = useMazeStore((s) => s.tick);
   const router = useRouter();
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    if (status !== 'playing') {
+    if (status !== 'playing' || isPaused) {
       if (intervalRef.current !== null) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
@@ -33,5 +34,5 @@ export function useMazeTimer() {
         intervalRef.current = null;
       }
     };
-  }, [status]);
+  }, [status, isPaused, tick]);
 }

@@ -11,6 +11,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useMazeStore } from '@/features/maze/store/mazeStore';
+import { AdMobBanner } from '@/ads/AdMobBanner';
 import { COLORS, COLOR_ORDER } from '@/game/config/colors';
 import { mazeOverStyles as styles } from '@/features/maze/styles/maze.styles';
 
@@ -65,7 +66,7 @@ export default function MazeOverScreen() {
   };
 
   const handleHome = () => {
-    useMazeStore.setState({ status: 'idle' });
+    useMazeStore.getState().resetToIdle();
     router.replace('/');
   };
 
@@ -106,6 +107,10 @@ export default function MazeOverScreen() {
       </Animated.View>
 
       <View style={styles.spacer} />
+
+      <View style={styles.adWrap}>
+        <AdMobBanner />
+      </View>
 
       <Animated.View style={[styles.buttons, btnsStyle]}>
         <Pressable

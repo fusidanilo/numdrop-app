@@ -75,6 +75,10 @@ void i18n.use(initReactI18next).init({
   interpolation: {
     escapeValue: false,
   },
+  // With multiple namespaces in useTranslation([...]), resolve keys across all listed NS (not only the first).
+  react: {
+    nsMode: 'fallback',
+  },
 });
 
 export default i18n;

@@ -17,7 +17,8 @@
   },
   "gameOver": {
     "scoreLabel": "Score",
-    "bestLabel": "Meilleur"
+    "bestLabel": "Meilleur",
+    "leaderboards": "Classements"
   },
   "effect": {
     "shield": "🛡️ BOUCLIER · prochain coup sans risque",

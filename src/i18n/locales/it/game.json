@@ -17,7 +17,8 @@
   },
   "gameOver": {
     "scoreLabel": "Punteggio",
-    "bestLabel": "Migliore"
+    "bestLabel": "Migliore",
+    "leaderboards": "Classifiche"
   },
   "effect": {
     "shield": "🛡️ SCUDO · il prossimo colpo è sicuro",

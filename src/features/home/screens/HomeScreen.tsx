@@ -25,16 +25,16 @@ export default function HomeScreen() {
   return (
     <View style={[styles.root, { paddingTop: insets.top + 24, paddingBottom: insets.bottom + 24 }]}>
       <Image
-        source={require('../../../../assets/icon-no-bg.png')}
+        source={require('../../../../assets/logo-extended-no-bg.png')}
         style={styles.logo}
         accessibilityRole="image"
         accessibilityLabel={t('appName')}
       />
 
       <Text style={styles.title}>{t('appName')}</Text>
-      <Text style={styles.subtitle}>{t('chooseMode')}</Text>
 
       <View style={styles.modeMenu}>
+        <Text style={styles.chooseModeLabel}>{t('chooseMode')}</Text>
         <Pressable
           style={({ pressed }) => [styles.modeCard, pressed && styles.modeCardPressed]}
           onPress={() => router.push('/game')}
@@ -52,7 +52,10 @@ export default function HomeScreen() {
         <Pressable
           style={({ pressed }) => [styles.modeCard, pressed && styles.modeCardPressed]}
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          onPress={() => router.push('/maze' as any)}
+          onPress={() => {
+            useMazeStore.getState().resetToIdle();
+            router.push('/maze' as any);
+          }}
         >
           <Text style={styles.modeName}>{t('pathTitle')}</Text>
           <Text style={styles.modeDescription}>{t('pathDesc')}</Text>

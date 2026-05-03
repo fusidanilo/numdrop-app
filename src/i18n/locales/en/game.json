@@ -17,7 +17,8 @@
   },
   "gameOver": {
     "scoreLabel": "Score",
-    "bestLabel": "Best"
+    "bestLabel": "Best",
+    "leaderboards": "Leaderboards"
   },
   "effect": {
     "shield": "🛡️ SHIELD · next hit safe",

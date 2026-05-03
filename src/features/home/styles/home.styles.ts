@@ -8,9 +8,10 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: 120,
-    height: 120,
-    marginBottom: 24,
+    width: '100%',
+    maxWidth: 300,
+    height: 70,
+    marginBottom: 12,
     resizeMode: 'contain',
   },
   title: {
@@ -19,13 +20,14 @@ export const styles = StyleSheet.create({
     color: '#2E2E2E',
     letterSpacing: -1.5,
     textAlign: 'center',
+    marginBottom: 8,
   },
-  subtitle: {
+  chooseModeLabel: {
     fontSize: 16,
     color: '#888',
     textAlign: 'center',
-    marginTop: 8,
     lineHeight: 22,
+    width: '100%',
   },
   highScoreRow: {
     flexDirection: 'row',

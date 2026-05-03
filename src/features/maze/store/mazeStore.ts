@@ -31,6 +31,8 @@ interface MazeState {
   round: number;
   timeLeft: number;
   streak: number;
+  /** In-game pause menu (timer and input frozen). */
+  isPaused: boolean;
 
   startGame: () => void;
   beginRound: () => void;
@@ -39,6 +41,9 @@ interface MazeState {
   submitPath: () => void;
   tick: (deltaMs: number) => void;
   setTimeOver: () => void;
+  setPaused: (paused: boolean) => void;
+  /** Back to ready screen; keeps highScore. Call when leaving Path for home or opening Path from home. */
+  resetToIdle: () => void;
   loadHighScore: () => Promise<void>;
 }
 
@@ -59,6 +64,7 @@ export const useMazeStore = create<MazeState>((set, get) => ({
   round: 0,
   timeLeft: INITIAL_TIME_MS,
   streak: 0,
+  isPaused: false,
 
   startGame: () => {
     const { grid, targetSequence } = generateGrid(1);
@@ -72,6 +78,7 @@ export const useMazeStore = create<MazeState>((set, get) => ({
       round: 1,
       timeLeft: INITIAL_TIME_MS,
       streak: 0,
+      isPaused: false,
     });
   },
 
@@ -164,8 +171,24 @@ export const useMazeStore = create<MazeState>((set, get) => ({
     if (score > highScore) {
       AsyncStorage.setItem(MAZE_HIGH_SCORE_KEY, String(score)).catch(() => {});
     }
-    set({ status: 'over', timeLeft: 0, highScore: newHighScore });
+    set({ status: 'over', timeLeft: 0, highScore: newHighScore, isPaused: false });
   },
+
+  setPaused: (paused) => set({ isPaused: paused }),
+
+  resetToIdle: () =>
+    set({
+      status: 'idle',
+      grid: makeEmptyGrid(),
+      targetSequence: [],
+      currentPath: [],
+      pathStatus: 'idle',
+      score: 0,
+      round: 0,
+      timeLeft: INITIAL_TIME_MS,
+      streak: 0,
+      isPaused: false,
+    }),
 
   loadHighScore: async () => {
     try {

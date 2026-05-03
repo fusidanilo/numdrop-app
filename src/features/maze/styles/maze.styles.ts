@@ -245,6 +245,14 @@ export const mazeOverStyles = StyleSheet.create({
     marginTop: 2,
   },
   spacer: { flex: 1 },
+  adWrap: {
+    width: '100%',
+    marginTop: 8,
+    marginBottom: 12,
+    minHeight: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   buttons: {
     width: '100%',
     gap: 12,

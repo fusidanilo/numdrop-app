@@ -12,9 +12,9 @@ import { MazeTargetDisplay } from '@/features/maze/components/MazeTargetDisplay'
 import { ModeReadyLayout } from '@/features/game-play/components/ModeReadyLayout';
 import { styles as pauseMenuStyles } from '@/features/game-play/styles/gameScreen.styles';
 import type { HowToPlayTip } from '@/game/config/howToPlayTips';
+import { computeTimeCapMs } from '@/features/maze/config/pathDifficulty';
 import {
   MAZE_HORIZONTAL_PADDING,
-  MAZE_TOTAL_TIME_MS,
   mazeScreenStyles as styles,
 } from '@/features/maze/styles/maze.styles';
 
@@ -41,6 +41,7 @@ export default function MazeScreen() {
   const startGame = useMazeStore((s) => s.startGame);
   const setPaused = useMazeStore((s) => s.setPaused);
   const resetToIdle = useMazeStore((s) => s.resetToIdle);
+  const devJumpToRound = useMazeStore((s) => s.devJumpToRound);
 
   useMazeTimer();
 
@@ -110,7 +111,7 @@ export default function MazeScreen() {
           score={score}
           round={round}
           timeLeft={timeLeft}
-          totalTime={MAZE_TOTAL_TIME_MS}
+          totalTime={computeTimeCapMs(round)}
           streak={streak}
         />
 
@@ -171,6 +172,42 @@ export default function MazeScreen() {
               >
                 <Text style={pauseMenuStyles.menuBtnGhostText}>{t('pause.exitHome')}</Text>
               </Pressable>
+
+              {__DEV__ && (
+                <View style={{ marginTop: 20, paddingTop: 16, borderTopWidth: 1, borderTopColor: 'rgba(0,0,0,0.08)' }}>
+                  <Text style={[pauseMenuStyles.menuSubtitle, { marginBottom: 10 }]}>
+                    Path (__DEV__): R10 ≈ difficoltà massima griglia; R57 ≈ tetto timer minimo (10s).
+                  </Text>
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                    {(
+                      [
+                        [1, 'R1'],
+                        [3, 'R3'],
+                        [6, 'R6'],
+                        [10, 'R10 max'],
+                        [25, 'R25'],
+                        [57, 'R57 min'],
+                      ] as const
+                    ).map(([r, label]) => (
+                      <Pressable
+                        key={r}
+                        style={({ pressed }) => ({
+                          paddingVertical: 8,
+                          paddingHorizontal: 10,
+                          borderRadius: 8,
+                          backgroundColor: pressed ? '#E0DDD8' : '#EEEAE4',
+                        })}
+                        onPress={() => {
+                          devJumpToRound(r);
+                          resumeFromMenu();
+                        }}
+                      >
+                        <Text style={{ fontSize: 12, fontWeight: '600', color: '#333' }}>{label}</Text>
+                      </Pressable>
+                    ))}
+                  </View>
+                </View>
+              )}
             </View>
           </View>
         </View>

@@ -19,7 +19,7 @@
     },
     {
       "title": "Temps",
-      "body": "Le temps diminue. Chaque manche terminée rajoute des secondes — enchaînez les séquences avant la fin."
+      "body": "Le temps diminue. Chaque manche rend du temps, mais le bonus et le plafond baissent avec les manches — reste au-dessus de zéro."
     },
     {
       "title": "Score et série",

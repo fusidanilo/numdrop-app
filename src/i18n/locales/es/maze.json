@@ -19,7 +19,7 @@
     },
     {
       "title": "Tiempo",
-      "body": "El reloj cuenta atrás. Cada ronda completada devuelve tiempo — completa secuencias antes de que llegue a cero."
+      "body": "El reloj cuenta atrás. Cada ronda devuelve tiempo, pero el bonus y el tope máximo bajan con el avance: no llegues a cero."
     },
     {
       "title": "Puntuación y racha",

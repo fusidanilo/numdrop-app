@@ -23,7 +23,7 @@ const LOW_TIME_THRESHOLD = 10_000;
 
 export function MazeHUD({ score, round, timeLeft, totalTime, streak }: Props) {
   const { t } = useTranslation('maze');
-  const progress = Math.max(0, timeLeft / totalTime);
+  const progress = Math.max(0, Math.min(1, timeLeft / totalTime));
   const isLow = timeLeft <= LOW_TIME_THRESHOLD;
   const seconds = Math.ceil(timeLeft / 1000);
 

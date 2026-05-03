@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { ColorId } from '@/game/config/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { generateGrid } from '@/features/maze/engine/gridGenerator';
+import { computeTimeBonusMs, computeTimeCapMs } from '@/features/maze/config/pathDifficulty';
 
 const MAZE_HIGH_SCORE_KEY = 'numdrop_maze_high_score';
 
@@ -45,6 +46,8 @@ interface MazeState {
   /** Back to ready screen; keeps highScore. Call when leaving Path for home or opening Path from home. */
   resetToIdle: () => void;
   loadHighScore: () => Promise<void>;
+  /** __DEV__ only: jump to a round and regenerate the grid (timer set to that round's cap). */
+  devJumpToRound: (targetRound: number) => void;
 }
 
 function makeEmptyGrid(): MazeCell[][] {
@@ -85,7 +88,9 @@ export const useMazeStore = create<MazeState>((set, get) => ({
   beginRound: () => {
     const nextRound = get().round + 1;
     const { grid, targetSequence } = generateGrid(nextRound);
-    set({ round: nextRound, grid, targetSequence, currentPath: [], pathStatus: 'idle' });
+    const cap = computeTimeCapMs(nextRound);
+    const timeLeft = Math.min(get().timeLeft, cap);
+    set({ round: nextRound, grid, targetSequence, currentPath: [], pathStatus: 'idle', timeLeft });
   },
 
   startPath: (step) => {
@@ -136,14 +141,16 @@ export const useMazeStore = create<MazeState>((set, get) => ({
         AsyncStorage.setItem(MAZE_HIGH_SCORE_KEY, String(newScore)).catch(() => {});
       }
 
-      const timeBonus = targetSequence.length * 3_000;
+      const roundCompleted = get().round;
+      const timeBonus = computeTimeBonusMs(roundCompleted, targetSequence.length);
+      const timeCap = computeTimeCapMs(roundCompleted);
 
       set({
         pathStatus: 'success',
         score: newScore,
         highScore: newHighScore,
         streak: newStreak,
-        timeLeft: Math.min(get().timeLeft + timeBonus, INITIAL_TIME_MS),
+        timeLeft: Math.min(get().timeLeft + timeBonus, timeCap),
       });
 
       setTimeout(() => {
@@ -200,5 +207,21 @@ export const useMazeStore = create<MazeState>((set, get) => ({
     } catch {
       // ignore
     }
+  },
+
+  devJumpToRound: (targetRound) => {
+    if (!__DEV__) return;
+    if (get().status !== 'playing') return;
+    const r = Math.max(1, Math.floor(targetRound));
+    const { grid, targetSequence } = generateGrid(r);
+    const cap = computeTimeCapMs(r);
+    set({
+      round: r,
+      grid,
+      targetSequence,
+      currentPath: [],
+      pathStatus: 'idle',
+      timeLeft: cap,
+    });
   },
 }));

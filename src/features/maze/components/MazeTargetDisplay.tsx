@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text } from 'react-native';
 import { COLORS } from '@/game/config/colors';
 import type { MazeCell } from '@/features/maze/store/mazeStore';
 import { useTranslation } from 'react-i18next';
@@ -15,11 +15,7 @@ export function MazeTargetDisplay({ sequence, currentPathLength }: Props) {
   return (
     <View style={styles.wrapper}>
       <Text style={styles.label}>{t('trace')}</Text>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.row}
-      >
+      <View style={styles.row}>
         {sequence.map((step, i) => {
           const colorDef = COLORS[step.colorId];
           const isDone = i < currentPathLength;
@@ -53,7 +49,7 @@ export function MazeTargetDisplay({ sequence, currentPathLength }: Props) {
             </React.Fragment>
           );
         })}
-      </ScrollView>
+      </View>
     </View>
   );
 }

@@ -19,7 +19,7 @@
     },
     {
       "title": "Time",
-      "body": "The clock counts down. Each round you complete adds time back — keep clearing sequences before it hits zero."
+      "body": "The clock counts down. Finished rounds add time, but the bonus per round shrinks and your max reserve drops as you advance — stay ahead of zero."
     },
     {
       "title": "Score & streak",

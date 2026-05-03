@@ -19,7 +19,7 @@
     },
     {
       "title": "Tempo",
-      "body": "Il tempo scende. Ogni round completato aggiunge secondi — completa le sequenze prima che arrivi a zero."
+      "body": "Il tempo scende. Ogni round completato ridà secondi, ma il bonus e la riserva massima calano col round: non farti sorprendere dallo zero."
     },
     {
       "title": "Punteggio e serie",

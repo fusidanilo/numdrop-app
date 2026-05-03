@@ -72,9 +72,6 @@ on:
 
 env:
   EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-  # false default: nasconde il toggle sandbox su Ready sulle build store-like.
-  # true/1: mostra il toggle pre-partita (QA); non attiva la sandbox finché l’utente non la accende (salvo FORCE nel codice).
-  EXPO_PUBLIC_DEV_GAME_MODE: ${{ vars.EXPO_PUBLIC_DEV_GAME_MODE || 'false' }}
   # Play Games — Repository variables (Settings → Secrets and variables → Actions → Variables):
   # EXPO_PUBLIC_PLAY_GAMES_PROJECT_ID, EXPO_PUBLIC_PLAY_GAMES_LEADERBOARD_ID, EXPO_PUBLIC_PLAY_GAMES_SNAPSHOT_NAME.
   # AdMob: EXPO_PUBLIC_ADMOB_ANDROID_APP_ID, EXPO_PUBLIC_ADMOB_IOS_APP_ID, EXPO_PUBLIC_ADMOB_ANDROID_BANNER_ID,
@@ -214,9 +211,8 @@ jobs:
             echo "EOF" >> "$GITHUB_ENV"
           fi
 
-      - name: Print Metro public env (sandbox)
+      - name: Print Metro public env
         run: |
-          echo "EXPO_PUBLIC_DEV_GAME_MODE=${EXPO_PUBLIC_DEV_GAME_MODE}"
           echo "EXPO_PUBLIC_PLAY_GAMES_PROJECT_ID=${EXPO_PUBLIC_PLAY_GAMES_PROJECT_ID:-}"
           echo "EXPO_PUBLIC_PLAY_GAMES_LEADERBOARD_ID=${EXPO_PUBLIC_PLAY_GAMES_LEADERBOARD_ID:-}"
           echo "EXPO_PUBLIC_PLAY_GAMES_SNAPSHOT_NAME=${EXPO_PUBLIC_PLAY_GAMES_SNAPSHOT_NAME:-}"
@@ -408,9 +404,8 @@ jobs:
             echo "EOF" >> "$GITHUB_ENV"
           fi
 
-      - name: Print Metro public env (sandbox)
+      - name: Print Metro public env
         run: |
-          echo "EXPO_PUBLIC_DEV_GAME_MODE=${EXPO_PUBLIC_DEV_GAME_MODE}"
           echo "EXPO_PUBLIC_PLAY_GAMES_PROJECT_ID=${EXPO_PUBLIC_PLAY_GAMES_PROJECT_ID:-}"
           echo "EXPO_PUBLIC_PLAY_GAMES_LEADERBOARD_ID=${EXPO_PUBLIC_PLAY_GAMES_LEADERBOARD_ID:-}"
           echo "EXPO_PUBLIC_PLAY_GAMES_SNAPSHOT_NAME=${EXPO_PUBLIC_PLAY_GAMES_SNAPSHOT_NAME:-}"

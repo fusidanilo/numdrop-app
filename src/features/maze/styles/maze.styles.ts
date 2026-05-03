@@ -48,8 +48,12 @@ export const mazeTargetStyles = StyleSheet.create({
     letterSpacing: 1.5,
   },
   row: {
+    width: '100%',
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
     gap: 4,
     paddingHorizontal: 8,
   },

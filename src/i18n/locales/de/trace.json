@@ -1,0 +1,30 @@
+{
+  "hudScore": "PUNKTE",
+  "hudRound": "RUNDE",
+  "hudStreak": "SERIE",
+  "streakEmpty": "—",
+  "progressLabel": "FIGUR",
+  "progressValue": "{{covered}} / {{total}} Felder",
+  "traceOver": {
+    "modeTitle": "Trace",
+    "subtitle": "Spiel vorbei"
+  },
+  "tipsTrace": [
+    {
+      "title": "Spielweise",
+      "body": "Farbige Felder bilden eine Figur. Ziehe in einem Zug und besuche jedes farbige Feld genau einmal — keine Zahlen, keine vorgegebene Reihenfolge. Ab Runde 7 ist das Raster 5×5, ab Runde 15 ist es 6×6, mit längeren Figuren."
+    },
+    {
+      "title": "Jedes Feld nur einmal",
+      "body": "Du darfst kein Feld zweimal betreten. Graue Felder gehören nicht zur Figur; bewege dich nur auf den hervorgehobenen Feldern."
+    },
+    {
+      "title": "Loslassen zum Prüfen",
+      "body": "Hebe den Finger, um den Pfad zu prüfen. Fehlt ein Feld oder bist du zu früh fertig, versuche es erneut — bei einem falschen Pfad wird die Serie zurückgesetzt."
+    },
+    {
+      "title": "Zeit & Punkte",
+      "body": "Die Zeit läuft wie im Pfad-Modus. Gelöste Figuren geben Zeit (später weniger), Punkte skalieren mit Größe und Serie."
+    }
+  ]
+}

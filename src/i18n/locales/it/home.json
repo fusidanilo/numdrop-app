@@ -3,5 +3,7 @@
   "classicTitle": "Classica",
   "classicDesc": "Tile che cadono — tocca il numero successivo per ogni colore prima che esca dallo schermo.",
   "pathTitle": "Percorso",
-  "pathDesc": "Traccia la sequenza di colori e numeri trascinando sulla griglia prima che finisca il tempo."
+  "pathDesc": "Traccia la sequenza di colori e numeri trascinando sulla griglia prima che finisca il tempo.",
+  "traceTitle": "Traccia",
+  "traceDesc": "Copri la forma colorata in un solo tratto — ogni cella evidenziata una volta, senza numeri."
 }

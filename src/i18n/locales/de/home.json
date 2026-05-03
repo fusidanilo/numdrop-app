@@ -3,5 +3,7 @@
   "classicTitle": "Klassisch",
   "classicDesc": "Fallende Kacheln — tippe die nächste Zahl pro Farbe, bevor sie den Bildschirm verlässt.",
   "pathTitle": "Pfad",
-  "pathDesc": "Verfolge die Farb- und Zahlenfolge durch Ziehen über das Raster, bevor die Zeit abläuft."
+  "pathDesc": "Verfolge die Farb- und Zahlenfolge durch Ziehen über das Raster, bevor die Zeit abläuft.",
+  "traceTitle": "Trace",
+  "traceDesc": "Überdecke die farbige Figur in einem Zug — jedes hervorgehobene Feld einmal, ohne Zahlen."
 }

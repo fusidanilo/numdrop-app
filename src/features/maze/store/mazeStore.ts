@@ -6,6 +6,20 @@ import { computeTimeBonusMs, computeTimeCapMs } from '@/features/maze/config/pat
 
 const MAZE_HIGH_SCORE_KEY = 'numdrop_maze_high_score';
 
+let mazeFailToIdleTimer: ReturnType<typeof setTimeout> | null = null;
+let mazeSuccessToNextRoundTimer: ReturnType<typeof setTimeout> | null = null;
+
+function clearMazePathTimers() {
+  if (mazeFailToIdleTimer) {
+    clearTimeout(mazeFailToIdleTimer);
+    mazeFailToIdleTimer = null;
+  }
+  if (mazeSuccessToNextRoundTimer) {
+    clearTimeout(mazeSuccessToNextRoundTimer);
+    mazeSuccessToNextRoundTimer = null;
+  }
+}
+
 export type MazeStatus = 'idle' | 'playing' | 'over';
 export type PathStatus = 'idle' | 'tracing' | 'success' | 'fail';
 
@@ -70,6 +84,7 @@ export const useMazeStore = create<MazeState>((set, get) => ({
   isPaused: false,
 
   startGame: () => {
+    clearMazePathTimers();
     const { grid, targetSequence } = generateGrid(1);
     set({
       status: 'playing',
@@ -94,8 +109,23 @@ export const useMazeStore = create<MazeState>((set, get) => ({
   },
 
   startPath: (step) => {
-    if (get().pathStatus === 'success' || get().pathStatus === 'fail') return;
     if (!step) return;
+    const ps = get().pathStatus;
+    if (ps === 'fail') {
+      if (mazeFailToIdleTimer) {
+        clearTimeout(mazeFailToIdleTimer);
+        mazeFailToIdleTimer = null;
+      }
+      set({ pathStatus: 'idle' });
+    } else if (ps === 'success') {
+      if (mazeSuccessToNextRoundTimer) {
+        clearTimeout(mazeSuccessToNextRoundTimer);
+        mazeSuccessToNextRoundTimer = null;
+      }
+      get().beginRound();
+    } else if (ps !== 'idle' && ps !== 'tracing') {
+      return;
+    }
     set({ currentPath: [step], pathStatus: 'tracing' });
   },
 
@@ -119,8 +149,15 @@ export const useMazeStore = create<MazeState>((set, get) => ({
     const { currentPath, grid, targetSequence, score, highScore, streak } = get();
 
     if (currentPath.length !== targetSequence.length) {
+      if (mazeFailToIdleTimer) {
+        clearTimeout(mazeFailToIdleTimer);
+        mazeFailToIdleTimer = null;
+      }
       set({ currentPath: [], pathStatus: 'fail', streak: 0 });
-      setTimeout(() => set({ pathStatus: 'idle' }), 600);
+      mazeFailToIdleTimer = setTimeout(() => {
+        mazeFailToIdleTimer = null;
+        set({ pathStatus: 'idle' });
+      }, 600);
       return;
     }
 
@@ -145,6 +182,15 @@ export const useMazeStore = create<MazeState>((set, get) => ({
       const timeBonus = computeTimeBonusMs(roundCompleted, targetSequence.length);
       const timeCap = computeTimeCapMs(roundCompleted);
 
+      if (mazeSuccessToNextRoundTimer) {
+        clearTimeout(mazeSuccessToNextRoundTimer);
+        mazeSuccessToNextRoundTimer = null;
+      }
+      if (mazeFailToIdleTimer) {
+        clearTimeout(mazeFailToIdleTimer);
+        mazeFailToIdleTimer = null;
+      }
+
       set({
         pathStatus: 'success',
         score: newScore,
@@ -153,12 +199,20 @@ export const useMazeStore = create<MazeState>((set, get) => ({
         timeLeft: Math.min(get().timeLeft + timeBonus, timeCap),
       });
 
-      setTimeout(() => {
+      mazeSuccessToNextRoundTimer = setTimeout(() => {
+        mazeSuccessToNextRoundTimer = null;
         get().beginRound();
       }, 500);
     } else {
+      if (mazeFailToIdleTimer) {
+        clearTimeout(mazeFailToIdleTimer);
+        mazeFailToIdleTimer = null;
+      }
       set({ currentPath: [], pathStatus: 'fail', streak: 0 });
-      setTimeout(() => set({ pathStatus: 'idle' }), 600);
+      mazeFailToIdleTimer = setTimeout(() => {
+        mazeFailToIdleTimer = null;
+        set({ pathStatus: 'idle' });
+      }, 600);
     }
   },
 
@@ -173,6 +227,7 @@ export const useMazeStore = create<MazeState>((set, get) => ({
   },
 
   setTimeOver: () => {
+    clearMazePathTimers();
     const { score, highScore } = get();
     const newHighScore = score > highScore ? score : highScore;
     if (score > highScore) {
@@ -183,7 +238,8 @@ export const useMazeStore = create<MazeState>((set, get) => ({
 
   setPaused: (paused) => set({ isPaused: paused }),
 
-  resetToIdle: () =>
+  resetToIdle: () => {
+    clearMazePathTimers();
     set({
       status: 'idle',
       grid: makeEmptyGrid(),
@@ -195,7 +251,8 @@ export const useMazeStore = create<MazeState>((set, get) => ({
       timeLeft: INITIAL_TIME_MS,
       streak: 0,
       isPaused: false,
-    }),
+    });
+  },
 
   loadHighScore: async () => {
     try {
@@ -212,6 +269,7 @@ export const useMazeStore = create<MazeState>((set, get) => ({
   devJumpToRound: (targetRound) => {
     if (!__DEV__) return;
     if (get().status !== 'playing') return;
+    clearMazePathTimers();
     const r = Math.max(1, Math.floor(targetRound));
     const { grid, targetSequence } = generateGrid(r);
     const cap = computeTimeCapMs(r);

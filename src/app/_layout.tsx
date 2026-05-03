@@ -27,6 +27,8 @@ export default function RootLayout() {
           <Stack.Screen name="gameover" />
           <Stack.Screen name="maze" />
           <Stack.Screen name="mazeover" />
+          <Stack.Screen name="trace" />
+          <Stack.Screen name="traceover" />
         </Stack>
         <AppOpenAdsController />
       </SafeAreaProvider>

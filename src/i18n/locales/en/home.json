@@ -3,5 +3,7 @@
   "classicTitle": "Classic",
   "classicDesc": "Falling tiles — tap the next number for each color before it leaves the screen.",
   "pathTitle": "Path",
-  "pathDesc": "Trace the color-and-number sequence by dragging across the grid before time runs out."
+  "pathDesc": "Trace the color-and-number sequence by dragging across the grid before time runs out.",
+  "traceTitle": "Trace",
+  "traceDesc": "Cover the colored shape in one stroke — every highlighted cell once, no numbers."
 }

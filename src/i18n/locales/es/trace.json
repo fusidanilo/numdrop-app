@@ -1,0 +1,30 @@
+{
+  "hudScore": "PUNTOS",
+  "hudRound": "RONDA",
+  "hudStreak": "RACHA",
+  "streakEmpty": "—",
+  "progressLabel": "FIGURA",
+  "progressValue": "{{covered}} / {{total}} celdas",
+  "traceOver": {
+    "modeTitle": "Trazo",
+    "subtitle": "Fin de la partida"
+  },
+  "tipsTrace": [
+    {
+      "title": "Cómo se juega",
+      "body": "Las celdas de color forman una figura en la cuadrícula. Arrastra de un solo trazo visitando cada celda de color exactamente una vez — sin números ni orden fijo. Desde la ronda 7 la cuadrícula es 5×5; desde la 15 es 6×6, con figuras más largas."
+    },
+    {
+      "title": "Una sola visita",
+      "body": "No puedes pisar la misma celda dos veces. Las celdas grises no forman parte de la figura; muévete solo por las resaltadas."
+    },
+    {
+      "title": "Suelta para comprobar",
+      "body": "Levanta el dedo para validar el camino. Si falta una celda o paras antes, inténtalo de nuevo — la racha se reinicia si el trazo es incorrecto."
+    },
+    {
+      "title": "Tiempo y puntuación",
+      "body": "El tiempo cuenta como en el modo Ruta. Las figuras resueltas añaden tiempo (cada vez menos) y los puntos crecen con el tamaño y la racha."
+    }
+  ]
+}

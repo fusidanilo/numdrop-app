@@ -3,5 +3,7 @@
   "classicTitle": "Classique",
   "classicDesc": "Tuiles qui tombent — touchez le bon numéro pour chaque couleur avant qu'elle ne sorte de l'écran.",
   "pathTitle": "Parcours",
-  "pathDesc": "Tracez la séquence couleur et nombre en glissant sur la grille avant la fin du temps."
+  "pathDesc": "Tracez la séquence couleur et nombre en glissant sur la grille avant la fin du temps.",
+  "traceTitle": "Trace",
+  "traceDesc": "Couvrez la forme colorée d’un seul trait — chaque case mise en évidence une fois, sans chiffres."
 }

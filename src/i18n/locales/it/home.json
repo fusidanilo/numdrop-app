@@ -1,0 +1,13 @@
+{
+  "chooseMode": "Scegli una modalità",
+  "classicTitle": "Classica",
+  "classicDesc": "Tile che cadono — tocca il numero successivo per ogni colore prima che esca dallo schermo.",
+  "pathTitle": "Percorso",
+  "pathDesc": "Traccia la sequenza di colori e numeri trascinando sulla griglia prima che finisca il tempo.",
+  "traceTitle": "Traccia",
+  "traceDesc": "Copri la forma colorata in un solo tratto — ogni cella evidenziata una volta, senza numeri.",
+  "slideTitle": "Slide",
+  "slideDesc": "Puzzle 3×3 infiniti — checkpoint ogni 5 round e un retry gratis per puzzle.",
+  "slideBest": "Migliore",
+  "slideBestValue": "round {{round}}"
+}

@@ -1,0 +1,16 @@
+{
+  "appName": "Numdrop",
+  "back": "Retour",
+  "start": "Commencer",
+  "home": "Accueil",
+  "ready": "Prêt ?",
+  "best": "Meilleur",
+  "score": "Score",
+  "newBest": "Nouveau record !",
+  "playAgain": "Rejouer",
+  "playAgainLower": "Rejouer",
+  "gameOver": "Partie terminée",
+  "round": "Manche",
+  "streak": "Série",
+  "gameOverTitle": "Game Over"
+}

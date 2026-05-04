@@ -1,0 +1,10 @@
+{
+  "name": "expo-play-games",
+  "platforms": ["ios", "android"],
+  "ios": {
+    "modules": ["ExpoPlayGamesModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.playgames.ExpoPlayGamesModule"]
+  }
+}

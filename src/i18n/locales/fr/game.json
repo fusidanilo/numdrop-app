@@ -1,0 +1,54 @@
+{
+  "pause": {
+    "title": "Jeu en pause",
+    "subtitle": "Respirez — reprenez quand vous voulez.",
+    "resume": "Reprendre",
+    "newGame": "Nouvelle partie",
+    "exitHome": "Retour à l'accueil"
+  },
+  "sandbox": {
+    "fullForced": "Bac à sable (pas de vies, pas de score · power-ups dès le départ) — ON (code)",
+    "fullOn": "Bac à sable (pas de vies, pas de score · power-ups dès le départ) — ON",
+    "fullOff": "Bac à sable (pas de vies, pas de score · power-ups dès le départ) — OFF",
+    "hint": "Touchez pour activer / désactiver"
+  },
+  "dev": {
+    "sandboxRibbon": "BAC À SABLE"
+  },
+  "gameOver": {
+    "scoreLabel": "Score",
+    "bestLabel": "Meilleur",
+    "leaderboards": "Classements"
+  },
+  "effect": {
+    "shield": "🛡️ BOUCLIER · prochain coup sans risque",
+    "freeze": "❄️ GEL · {{seconds}} s"
+  },
+  "tier": {
+    "level2": "Niveau 2",
+    "level3Color": "Niveau 3 — 3e couleur !",
+    "maxSpeed": "Vitesse max !",
+    "ghost": "👻 Tuiles fantômes !",
+    "double": "×2 Tuiles doubles !",
+    "bomb": "💣 Tuiles bombes !",
+    "cycleLevel": "Cycle {{phase}} · Niveau {{pos}}"
+  },
+  "tipsClassic": [
+    {
+      "title": "Comment jouer",
+      "body": "Des tuiles tombent en trois couleurs. Associez chaque numéro au petit badge de cette couleur en haut à droite — les chaînes vont de 1 → 9 → 1."
+    },
+    {
+      "title": "Mauvais touchers",
+      "body": "Toucher le mauvais numéro remet la chaîne de cette couleur à 1 et le combo à ×1."
+    },
+    {
+      "title": "Vies",
+      "body": "Si la tuile montrant le prochain numéro de votre couleur atteint le bas sans être touchée, vous perdez un cœur. Les autres numéros peuvent partir sans pénalité."
+    },
+    {
+      "title": "Combo et power-ups",
+      "body": "Chaque bon toucher augmente le combo pour plus de points. Tous les 10 bons touchers d'affilée donnent un power-up — touchez les icônes en bas quand vous en avez besoin."
+    }
+  ]
+}

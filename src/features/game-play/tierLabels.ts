@@ -1,17 +1,21 @@
-const TIER_LABELS: Record<number, string> = {
-  1: 'Level 2',
-  2: 'Level 3 — 3rd colour!',
-  3: 'Max speed!',
-  4: '👻 Ghost tiles!',
-  5: '×2 Double tiles!',
-  6: '💣 Bomb tiles!',
+import type { TFunction } from 'i18next';
+
+const TIER_FLASH_KEY: Record<number, string> = {
+  1: 'tier.level2',
+  2: 'tier.level3Color',
+  3: 'tier.maxSpeed',
+  4: 'tier.ghost',
+  5: 'tier.double',
+  6: 'tier.bomb',
 };
 
-export function getTierLabel(tier: number): string {
+const TIERS_PER_CYCLE = 7;
+
+export function getTierLabel(t: TFunction, tier: number): string {
   if (tier === 0) return '';
-  if (TIER_LABELS[tier]) return TIER_LABELS[tier];
-  const TIERS_PER_CYCLE = 7;
+  const fixed = TIER_FLASH_KEY[tier];
+  if (fixed) return t(fixed);
   const phase = Math.floor(tier / TIERS_PER_CYCLE) + 1;
   const pos = (tier % TIERS_PER_CYCLE) + 1;
-  return `Cycle ${phase} · Level ${pos}`;
+  return t('tier.cycleLevel', { phase, pos });
 }

@@ -7,26 +7,28 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 28,
     alignItems: 'center',
   },
-  deco: {
-    flexDirection: 'row',
-    marginBottom: 32,
+  homeHeader: {
+    width: '100%',
     alignItems: 'center',
+    flexShrink: 0,
   },
-  decoTile: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+  modeScroll: {
+    flex: 1,
+    width: '100%',
+  },
+  modeScrollContent: {
+    flexGrow: 1,
+    width: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-    elevation: 4,
+    paddingTop: 4,
+    paddingBottom: 8,
   },
-  decoNum: {
-    fontSize: 26,
-    fontWeight: '800',
+  logo: {
+    width: '100%',
+    maxWidth: 300,
+    height: 70,
+    marginBottom: 12,
+    resizeMode: 'contain',
   },
   title: {
     fontSize: 36,
@@ -34,13 +36,14 @@ export const styles = StyleSheet.create({
     color: '#2E2E2E',
     letterSpacing: -1.5,
     textAlign: 'center',
+    marginBottom: 8,
   },
-  subtitle: {
+  chooseModeLabel: {
     fontSize: 16,
     color: '#888',
     textAlign: 'center',
-    marginTop: 8,
     lineHeight: 22,
+    width: '100%',
   },
   highScoreRow: {
     flexDirection: 'row',
@@ -114,5 +117,86 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#FAF7F2',
     letterSpacing: 0.4,
+  },
+  btnSecondary: {
+    width: '100%',
+    minHeight: 48,
+    marginTop: 12,
+    paddingVertical: 13,
+    paddingHorizontal: 28,
+    borderRadius: 999,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    borderColor: '#C8C4BE',
+  },
+  btnSecondaryPressed: {
+    opacity: 0.7,
+  },
+  btnSecondaryText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#666',
+    letterSpacing: 0.3,
+  },
+
+  modeMenu: {
+    width: '100%',
+    gap: 12,
+    paddingTop: 8,
+  },
+  modeCard: {
+    width: '100%',
+    backgroundColor: '#F0EDE8',
+    borderRadius: 20,
+    paddingVertical: 18,
+    paddingHorizontal: 20,
+    borderWidth: 1,
+    borderColor: '#E8E4DE',
+  },
+  modeCardPressed: {
+    opacity: 0.92,
+    transform: [{ scale: 0.99 }],
+  },
+  modeName: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#2E2E2E',
+    letterSpacing: -0.5,
+    marginBottom: 6,
+  },
+  modeDescription: {
+    fontSize: 14,
+    color: '#666',
+    lineHeight: 20,
+  },
+  modeBestRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    gap: 6,
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#E0DCD4',
+  },
+  modeBestLabel: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#AAA',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+  },
+  /** Slide card: “Best” in title case, not all-caps */
+  modeBestLabelPlain: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#AAA',
+    letterSpacing: 0.8,
+  },
+  modeBestValue: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: '#3D3D3D',
   },
 });

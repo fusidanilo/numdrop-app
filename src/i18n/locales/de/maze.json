@@ -1,0 +1,29 @@
+{
+  "hudScore": "PUNKTE",
+  "hudRound": "RUNDE",
+  "hudStreak": "SERIE",
+  "streakEmpty": "—",
+  "trace": "SPUR",
+  "pathOver": {
+    "modeTitle": "Pfad",
+    "subtitle": "Spiel vorbei"
+  },
+  "tipsPath": [
+    {
+      "title": "Spielanleitung",
+      "body": "Über dem Raster erscheint eine Zielsequenz. Ziehe über Kacheln, um sie in exakter Farb- und Zahlenreihenfolge zu verbinden."
+    },
+    {
+      "title": "Benachbarte Schritte",
+      "body": "Jede neue Kachel muss orthogonal zur vorherigen liegen (oben, unten, links, rechts). Dieselbe Kachel darfst du im selben Pfad nicht zweimal nutzen."
+    },
+    {
+      "title": "Zeit",
+      "body": "Die Uhr läuft runter. Geschaffte Runden geben Zeit zurück, aber Bonus und Obergrenze sinken mit der Rundenzahl — bleib über null."
+    },
+    {
+      "title": "Punkte & Serie",
+      "body": "Längere Sequenzen und Serien multiplizieren die Punkte. Ein falscher Pfad löscht die Serie, du kannst sofort neu versuchen."
+    }
+  ]
+}

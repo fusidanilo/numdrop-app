@@ -1,0 +1,29 @@
+{
+  "hudScore": "SCORE",
+  "hudRound": "MANCHE",
+  "hudStreak": "SÉRIE",
+  "streakEmpty": "—",
+  "trace": "TRACE",
+  "pathOver": {
+    "modeTitle": "Parcours",
+    "subtitle": "Partie terminée"
+  },
+  "tipsPath": [
+    {
+      "title": "Comment jouer",
+      "body": "Une séquence cible apparaît au-dessus de la grille. Glissez sur les tuiles pour les relier dans l'ordre exact des couleurs et des nombres."
+    },
+    {
+      "title": "Cases adjacentes",
+      "body": "Chaque nouvelle tuile doit être à côté de la précédente (haut, bas, gauche ou droite). Vous ne pouvez pas réutiliser une tuile dans le même chemin."
+    },
+    {
+      "title": "Temps",
+      "body": "Le temps diminue. Chaque manche rend du temps, mais le bonus et le plafond baissent avec les manches — reste au-dessus de zéro."
+    },
+    {
+      "title": "Score et série",
+      "body": "Les séquences longues et les séries multiplient les points. Un mauvais chemin efface la série, mais vous pouvez réessayer tout de suite."
+    }
+  ]
+}

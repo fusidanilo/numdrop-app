@@ -1,0 +1,16 @@
+{
+  "appName": "Numdrop",
+  "back": "Back",
+  "start": "Start",
+  "home": "Home",
+  "ready": "Ready?",
+  "best": "Best",
+  "score": "Score",
+  "newBest": "New best!",
+  "playAgain": "Play Again",
+  "playAgainLower": "Play again",
+  "gameOver": "Game over",
+  "round": "Round",
+  "streak": "Streak",
+  "gameOverTitle": "Game Over"
+}

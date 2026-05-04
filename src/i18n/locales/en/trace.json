@@ -1,0 +1,30 @@
+{
+  "hudScore": "SCORE",
+  "hudRound": "ROUND",
+  "hudStreak": "STREAK",
+  "streakEmpty": "—",
+  "progressLabel": "FIGURE",
+  "progressValue": "{{covered}} / {{total}} cells",
+  "traceOver": {
+    "modeTitle": "Trace",
+    "subtitle": "Game over"
+  },
+  "tipsTrace": [
+    {
+      "title": "How to play",
+      "body": "Colored cells form a shape on the grid. Drag in one stroke to visit every colored cell exactly once — no numbers, no prescribed order. From round 7 the grid is 5×5, from round 15 it is 6×6, with longer figures."
+    },
+    {
+      "title": "One visit each",
+      "body": "You cannot step on the same cell twice. Gray cells are not part of the figure; only move on highlighted cells."
+    },
+    {
+      "title": "Release to submit",
+      "body": "Lift your finger to check the path. If you missed a cell or stopped early, try again — your streak resets on a wrong trace."
+    },
+    {
+      "title": "Time & score",
+      "body": "The clock counts down like Path mode. Solved figures add time (less over time) and points scale with size and streak."
+    }
+  ]
+}

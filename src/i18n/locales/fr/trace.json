@@ -1,0 +1,30 @@
+{
+  "hudScore": "SCORE",
+  "hudRound": "MANCHE",
+  "hudStreak": "SÉRIE",
+  "streakEmpty": "—",
+  "progressLabel": "FIGURE",
+  "progressValue": "{{covered}} / {{total}} cases",
+  "traceOver": {
+    "modeTitle": "Trace",
+    "subtitle": "Partie terminée"
+  },
+  "tipsTrace": [
+    {
+      "title": "Comment jouer",
+      "body": "Les cases colorées forment une figure. Tracez d’un seul trait en visitant chaque case colorée exactement une fois — pas de chiffres, pas d’ordre imposé. À partir de la manche 7 la grille passe en 5×5, puis 6×6 à partir de la 15, avec des figures plus longues."
+    },
+    {
+      "title": "Une visite chacune",
+      "body": "Vous ne pouvez pas repasser sur la même case. Les cases grises ne font pas partie de la figure ; ne vous déplacez que sur les cases mises en évidence."
+    },
+    {
+      "title": "Relâcher pour valider",
+      "body": "Levez le doigt pour vérifier le chemin. S’il manque une case ou si vous vous arrêtez trop tôt, réessayez — la série repart à zéro si le tracé est incorrect."
+    },
+    {
+      "title": "Temps et score",
+      "body": "Le chrono défile comme en mode Chemin. Les figures résolues ajoutent du temps (de moins en moins) et les points dépendent de la taille et de la série."
+    }
+  ]
+}

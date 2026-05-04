@@ -8,7 +8,7 @@ export type GameStatus = 'idle' | 'playing' | 'over';
 export interface PowerUps {
   freeze: number;
   shield: number;
-  /** Bomba: rimuove tutte le tile sullo schermo (nessuna vita persa). */
+  /** Bomb: clears all tiles on screen (no life lost). */
   bomb: number;
 }
 
@@ -42,9 +42,9 @@ interface GameState {
   powerUps: PowerUps;
   /** True while a previously-activated shield is waiting to absorb a life loss. */
   shieldActive: boolean;
-  /** Solo freeze (timed). La bomba è istantanea e usa clearBoardNonce. */
+  /** Only freeze is timed; bomb is instant and uses clearBoardNonce. */
   activeEffect: ActiveEffect | null;
-  /** Il loop consuma questo nonce per svuotare il campo (bomba power-up). */
+  /** The loop consumes this nonce to clear the board (bomb power-up). */
   clearBoardNonce: number;
 
   startGame: () => void;
@@ -56,7 +56,7 @@ interface GameState {
   /** Called when a tile is tapped but the number is wrong. */
   tapMiss: (colorId: ColorId) => void;
   /**
-   * Called when the required tile for a colour exits without being tapped (or a bomb explodes).
+   * Called when the required tile for a color exits without being tapped (or a bomb explodes).
    * Costs a life (unless a shield is active) and resets the chain.
    */
   loseLife: (colorId: ColorId) => void;
@@ -126,7 +126,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       ...(isDevGameMode() ? {} : { score: score + points }),
     };
 
-    // Sandbox: milestone ogni 5 hit + cariche piene all'avvio; gioco normale: ogni 10
+    // Sandbox: milestone every 5 hits + full charges at start; normal game: every 10
     const powerUpMilestone = isDevGameMode() ? 5 : 10;
     if (newCombo % powerUpMilestone === 0) {
       const types: Array<keyof PowerUps> = ['freeze', 'shield', 'bomb'];

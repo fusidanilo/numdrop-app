@@ -86,8 +86,9 @@ export const styles = StyleSheet.create({
     gap: 14,
   },
   adWrap: {
-    marginTop: 16,
-    marginBottom: 4,
+    width: '100%',
+    marginTop: 8,
+    marginBottom: 12,
     minHeight: 50,
     justifyContent: 'center',
     alignItems: 'center',

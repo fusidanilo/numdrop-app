@@ -27,10 +27,22 @@ module.exports = ({ config }) => {
     },
   ]);
   plugins.push("./plugins/withAndroidComposeKotlinCompat");
+  plugins.push("./plugins/withGooglePlayGames");
+
+  const existingExtra =
+    typeof baseConfig.extra === "object" && baseConfig.extra !== null && !Array.isArray(baseConfig.extra)
+      ? baseConfig.extra
+      : {};
 
   return {
     ...baseConfig,
     newArchEnabled: false,
     plugins,
+    extra: {
+      ...existingExtra,
+      playGamesLeaderboardId: (process.env.EXPO_PUBLIC_PLAY_GAMES_LEADERBOARD_ID ?? "").trim(),
+      playGamesSnapshotName:
+        (process.env.EXPO_PUBLIC_PLAY_GAMES_SNAPSHOT_NAME ?? "").trim() || "numdrop-progress",
+    },
   };
 };

@@ -1,0 +1,50 @@
+{
+  "slideReadyTitle": "Slide",
+  "startEndless": "Spielen",
+  "startFromCheckpoint": "Am Checkpoint weiterspielen (nach Runde {{last}})",
+  "hudTime": "ZEIT",
+  "hudMoves": "ZÜGE",
+  "hudRound": "RUNDE",
+  "hudMovesOf": "{{used}} / {{max}}",
+  "hudMovesLeft": "noch {{count}}",
+  "hudCheckpointHint": "Nächste bei R{{next}} · alle {{every}}",
+  "slideOver": {
+    "modeTitle": "Slide",
+    "winSubtitle": "Runde geschafft!",
+    "lostTitle": "Keine Züge mehr",
+    "lostSubtitle": "Du hast alle erlaubten Züge für diese Runde verbraucht.",
+    "lostHint": "Nutze den kostenlosen Retry oder starte beim letzten Checkpoint — in höheren Runden gibt es weniger Züge.",
+    "lostHintAfterFree": "Der kostenlose Versuch ist aufgebraucht. Schau dir eine kurze Werbung für einen weiteren Versuch in dieser Runde an, oder starte beim letzten Checkpoint neu.",
+    "lostHintFinal": "Keine weiteren Versuche in dieser Runde: Checkpoint neu starten oder zur Startseite.",
+    "retryRewarded": "Werbung ansehen & erneut",
+    "roundCleared": "Runde {{round}}",
+    "roundFailed": "Runde {{round}}",
+    "checkpointSaved": "Checkpoint — Runde {{round}}",
+    "checkpointStatusNone": "Erster Checkpoint nach Abschluss von Runde {{every}}.",
+    "checkpointStatusSaved": "Letzter Checkpoint: nach Runde {{last}} (alle {{every}} Runden).",
+    "timeLabel": "Zeit",
+    "movesLabel": "Züge",
+    "movesLimitLabel": "Verwendete Züge",
+    "movesUsedOfMax": "{{used}} / {{max}}",
+    "nextRound": "Nächste Runde",
+    "retryPuzzle": "Dieses Puzzle erneut",
+    "fromCheckpoint": "Am Checkpoint neu starten",
+    "newRoundRecord": "Neuer Rundenrekord!",
+    "recordLabel": "Best",
+    "recordBestRound": "runde {{round}}"
+  },
+  "tipsSlide": [
+    {
+      "title": "Endloslauf",
+      "body": "Löse 3×3-Puzzles nacheinander. Jede Runde wird etwas strenger bei Zeit und Zügelimit."
+    },
+    {
+      "title": "Checkpoints",
+      "body": "Alle 5 abgeschlossenen Runden wird ein Checkpoint gespeichert. Wenn du nach dem Gratis-Retry (und ggf. Werbe-Retry) noch scheiterst, startest du nach dem letzten Checkpoint (oder in Runde 1 ohne Checkpoint)."
+    },
+    {
+      "title": "Gratis-Retry",
+      "body": "Beim ersten Fehlschlag darfst du einmal mit neuem Mischbild neu anfangen. Mit einer kurzen Werbung gibt es ggf. einen weiteren Versuch vor dem Checkpoint."
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "hudScore": "PUNTI",
+  "hudRound": "ROUND",
+  "hudStreak": "SERIE",
+  "streakEmpty": "—",
+  "progressLabel": "FIGURA",
+  "progressValue": "{{covered}} / {{total}} celle",
+  "traceOver": {
+    "modeTitle": "Traccia",
+    "subtitle": "Partita finita"
+  },
+  "tipsTrace": [
+    {
+      "title": "Come si gioca",
+      "body": "Le celle colorate formano una figura sulla griglia. Trascina in un solo tratto visitando ogni cella colorata una sola volta — senza numeri e senza ordine imposto. Dal round 7 la griglia è 5×5, dal round 15 è 6×6, con figure più lunghe."
+    },
+    {
+      "title": "Una sola visita",
+      "body": "Non puoi passare due volte sulla stessa cella. Le celle grigie non fanno parte della figura; muoviti solo sulle celle evidenziate."
+    },
+    {
+      "title": "Alza il dito per inviare",
+      "body": "Solleva il dito per controllare il percorso. Se manca una cella o ti fermi prima, riprova — la serie si azzera con un tracciato sbagliato."
+    },
+    {
+      "title": "Tempo e punti",
+      "body": "Il tempo scorre come in Percorso. Figure risolte aggiungono tempo (sempre meno col progredire) e i punti crescono con dimensione e serie."
+    }
+  ]
+}

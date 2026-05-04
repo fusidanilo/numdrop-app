@@ -24,12 +24,69 @@ on:
           - all
           - android
           - ios
+      play_games_project_id:
+        description: "Optional: override EXPO_PUBLIC_PLAY_GAMES_PROJECT_ID (else Repository Variable)"
+        type: string
+        required: false
+        default: ""
+      play_games_leaderboard_id:
+        description: "Optional: override EXPO_PUBLIC_PLAY_GAMES_LEADERBOARD_ID (else Repository Variable)"
+        type: string
+        required: false
+        default: ""
+      play_games_snapshot_name:
+        description: "Optional: override EXPO_PUBLIC_PLAY_GAMES_SNAPSHOT_NAME (else Variable or numdrop-progress)"
+        type: string
+        required: false
+        default: ""
+      admob_android_app_id:
+        description: "Optional: override EXPO_PUBLIC_ADMOB_ANDROID_APP_ID (else Repository Variable / app.config default)"
+        type: string
+        required: false
+        default: ""
+      admob_ios_app_id:
+        description: "Optional: override EXPO_PUBLIC_ADMOB_IOS_APP_ID (else Repository Variable / app.config default)"
+        type: string
+        required: false
+        default: ""
+      admob_android_banner_id:
+        description: "Optional: override EXPO_PUBLIC_ADMOB_ANDROID_BANNER_ID (else Repository Variable)"
+        type: string
+        required: false
+        default: ""
+      admob_ios_banner_id:
+        description: "Optional: override EXPO_PUBLIC_ADMOB_IOS_BANNER_ID (else Repository Variable)"
+        type: string
+        required: false
+        default: ""
+      admob_android_app_open_id:
+        description: "Optional: override EXPO_PUBLIC_ADMOB_ANDROID_APP_OPEN_ID (else Repository Variable)"
+        type: string
+        required: false
+        default: ""
+      admob_ios_app_open_id:
+        description: "Optional: override EXPO_PUBLIC_ADMOB_IOS_APP_OPEN_ID (else Repository Variable)"
+        type: string
+        required: false
+        default: ""
 
 env:
   EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-  # false default: nasconde il toggle sandbox su Ready sulle build store-like.
-  # true/1: mostra il toggle pre-partita (QA); non attiva la sandbox finché l’utente non la accende (salvo FORCE nel codice).
-  EXPO_PUBLIC_DEV_GAME_MODE: ${{ vars.EXPO_PUBLIC_DEV_GAME_MODE || 'false' }}
+  # Play Games — Repository variables (Settings → Secrets and variables → Actions → Variables):
+  # EXPO_PUBLIC_PLAY_GAMES_PROJECT_ID, EXPO_PUBLIC_PLAY_GAMES_LEADERBOARD_ID, EXPO_PUBLIC_PLAY_GAMES_SNAPSHOT_NAME.
+  # AdMob: EXPO_PUBLIC_ADMOB_ANDROID_APP_ID, EXPO_PUBLIC_ADMOB_IOS_APP_ID, EXPO_PUBLIC_ADMOB_ANDROID_BANNER_ID,
+  # EXPO_PUBLIC_ADMOB_IOS_BANNER_ID, EXPO_PUBLIC_ADMOB_ANDROID_APP_OPEN_ID, EXPO_PUBLIC_ADMOB_IOS_APP_OPEN_ID.
+  # Su workflow_dispatch puoi sovrascrivere Play Games e AdMob (step "Apply workflow_dispatch overrides …").
+  EXPO_PUBLIC_PLAY_GAMES_PROJECT_ID: ${{ vars.EXPO_PUBLIC_PLAY_GAMES_PROJECT_ID }}
+  EXPO_PUBLIC_PLAY_GAMES_LEADERBOARD_ID: ${{ vars.EXPO_PUBLIC_PLAY_GAMES_LEADERBOARD_ID }}
+  EXPO_PUBLIC_PLAY_GAMES_SNAPSHOT_NAME: ${{ vars.EXPO_PUBLIC_PLAY_GAMES_SNAPSHOT_NAME || 'numdrop-progress' }}
+  # AdMob — App ID (manifest / GMA SDK) + unit id banner & app open. Imposta le Repository variables; vedi app.config.js e src/ads/adMob.ts.
+  EXPO_PUBLIC_ADMOB_ANDROID_APP_ID: ${{ vars.EXPO_PUBLIC_ADMOB_ANDROID_APP_ID }}
+  EXPO_PUBLIC_ADMOB_IOS_APP_ID: ${{ vars.EXPO_PUBLIC_ADMOB_IOS_APP_ID }}
+  EXPO_PUBLIC_ADMOB_ANDROID_BANNER_ID: ${{ vars.EXPO_PUBLIC_ADMOB_ANDROID_BANNER_ID }}
+  EXPO_PUBLIC_ADMOB_IOS_BANNER_ID: ${{ vars.EXPO_PUBLIC_ADMOB_IOS_BANNER_ID }}
+  EXPO_PUBLIC_ADMOB_ANDROID_APP_OPEN_ID: ${{ vars.EXPO_PUBLIC_ADMOB_ANDROID_APP_OPEN_ID }}
+  EXPO_PUBLIC_ADMOB_IOS_APP_OPEN_ID: ${{ vars.EXPO_PUBLIC_ADMOB_IOS_APP_OPEN_ID }}
 
 concurrency:
   group: mobile-cicd-${{ github.ref }}
@@ -95,8 +152,76 @@ jobs:
       - name: Verify EAS auth
         run: eas whoami
 
-      - name: Print Metro public env (sandbox)
-        run: echo "EXPO_PUBLIC_DEV_GAME_MODE=${EXPO_PUBLIC_DEV_GAME_MODE}"
+      - name: Apply workflow_dispatch overrides (Play Games + AdMob)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          set -euo pipefail
+          pid="${{ github.event.inputs.play_games_project_id }}"
+          lid="${{ github.event.inputs.play_games_leaderboard_id }}"
+          snap="${{ github.event.inputs.play_games_snapshot_name }}"
+          if [ -n "$pid" ]; then
+            echo "EXPO_PUBLIC_PLAY_GAMES_PROJECT_ID<<EOF" >> "$GITHUB_ENV"
+            printf '%s\n' "$pid" >> "$GITHUB_ENV"
+            echo "EOF" >> "$GITHUB_ENV"
+          fi
+          if [ -n "$lid" ]; then
+            echo "EXPO_PUBLIC_PLAY_GAMES_LEADERBOARD_ID<<EOF" >> "$GITHUB_ENV"
+            printf '%s\n' "$lid" >> "$GITHUB_ENV"
+            echo "EOF" >> "$GITHUB_ENV"
+          fi
+          if [ -n "$snap" ]; then
+            echo "EXPO_PUBLIC_PLAY_GAMES_SNAPSHOT_NAME<<EOF" >> "$GITHUB_ENV"
+            printf '%s\n' "$snap" >> "$GITHUB_ENV"
+            echo "EOF" >> "$GITHUB_ENV"
+          fi
+          aaid="${{ github.event.inputs.admob_android_app_id }}"
+          aiid="${{ github.event.inputs.admob_ios_app_id }}"
+          abid="${{ github.event.inputs.admob_android_banner_id }}"
+          aibid="${{ github.event.inputs.admob_ios_banner_id }}"
+          aaoid="${{ github.event.inputs.admob_android_app_open_id }}"
+          aiooid="${{ github.event.inputs.admob_ios_app_open_id }}"
+          if [ -n "$aaid" ]; then
+            echo "EXPO_PUBLIC_ADMOB_ANDROID_APP_ID<<EOF" >> "$GITHUB_ENV"
+            printf '%s\n' "$aaid" >> "$GITHUB_ENV"
+            echo "EOF" >> "$GITHUB_ENV"
+          fi
+          if [ -n "$aiid" ]; then
+            echo "EXPO_PUBLIC_ADMOB_IOS_APP_ID<<EOF" >> "$GITHUB_ENV"
+            printf '%s\n' "$aiid" >> "$GITHUB_ENV"
+            echo "EOF" >> "$GITHUB_ENV"
+          fi
+          if [ -n "$abid" ]; then
+            echo "EXPO_PUBLIC_ADMOB_ANDROID_BANNER_ID<<EOF" >> "$GITHUB_ENV"
+            printf '%s\n' "$abid" >> "$GITHUB_ENV"
+            echo "EOF" >> "$GITHUB_ENV"
+          fi
+          if [ -n "$aibid" ]; then
+            echo "EXPO_PUBLIC_ADMOB_IOS_BANNER_ID<<EOF" >> "$GITHUB_ENV"
+            printf '%s\n' "$aibid" >> "$GITHUB_ENV"
+            echo "EOF" >> "$GITHUB_ENV"
+          fi
+          if [ -n "$aaoid" ]; then
+            echo "EXPO_PUBLIC_ADMOB_ANDROID_APP_OPEN_ID<<EOF" >> "$GITHUB_ENV"
+            printf '%s\n' "$aaoid" >> "$GITHUB_ENV"
+            echo "EOF" >> "$GITHUB_ENV"
+          fi
+          if [ -n "$aiooid" ]; then
+            echo "EXPO_PUBLIC_ADMOB_IOS_APP_OPEN_ID<<EOF" >> "$GITHUB_ENV"
+            printf '%s\n' "$aiooid" >> "$GITHUB_ENV"
+            echo "EOF" >> "$GITHUB_ENV"
+          fi
+
+      - name: Print Metro public env
+        run: |
+          echo "EXPO_PUBLIC_PLAY_GAMES_PROJECT_ID=${EXPO_PUBLIC_PLAY_GAMES_PROJECT_ID:-}"
+          echo "EXPO_PUBLIC_PLAY_GAMES_LEADERBOARD_ID=${EXPO_PUBLIC_PLAY_GAMES_LEADERBOARD_ID:-}"
+          echo "EXPO_PUBLIC_PLAY_GAMES_SNAPSHOT_NAME=${EXPO_PUBLIC_PLAY_GAMES_SNAPSHOT_NAME:-}"
+          echo "EXPO_PUBLIC_ADMOB_ANDROID_APP_ID=${EXPO_PUBLIC_ADMOB_ANDROID_APP_ID:-}"
+          echo "EXPO_PUBLIC_ADMOB_IOS_APP_ID=${EXPO_PUBLIC_ADMOB_IOS_APP_ID:-}"
+          echo "EXPO_PUBLIC_ADMOB_ANDROID_BANNER_ID=${EXPO_PUBLIC_ADMOB_ANDROID_BANNER_ID:-}"
+          echo "EXPO_PUBLIC_ADMOB_IOS_BANNER_ID=${EXPO_PUBLIC_ADMOB_IOS_BANNER_ID:-}"
+          echo "EXPO_PUBLIC_ADMOB_ANDROID_APP_OPEN_ID=${EXPO_PUBLIC_ADMOB_ANDROID_APP_OPEN_ID:-}"
+          echo "EXPO_PUBLIC_ADMOB_IOS_APP_OPEN_ID=${EXPO_PUBLIC_ADMOB_IOS_APP_OPEN_ID:-}"
 
       - name: Bump Android version code for CI
         run: |
@@ -220,8 +345,76 @@ jobs:
       - name: Verify EAS auth
         run: eas whoami
 
-      - name: Print Metro public env (sandbox)
-        run: echo "EXPO_PUBLIC_DEV_GAME_MODE=${EXPO_PUBLIC_DEV_GAME_MODE}"
+      - name: Apply workflow_dispatch overrides (Play Games + AdMob)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          set -euo pipefail
+          pid="${{ github.event.inputs.play_games_project_id }}"
+          lid="${{ github.event.inputs.play_games_leaderboard_id }}"
+          snap="${{ github.event.inputs.play_games_snapshot_name }}"
+          if [ -n "$pid" ]; then
+            echo "EXPO_PUBLIC_PLAY_GAMES_PROJECT_ID<<EOF" >> "$GITHUB_ENV"
+            printf '%s\n' "$pid" >> "$GITHUB_ENV"
+            echo "EOF" >> "$GITHUB_ENV"
+          fi
+          if [ -n "$lid" ]; then
+            echo "EXPO_PUBLIC_PLAY_GAMES_LEADERBOARD_ID<<EOF" >> "$GITHUB_ENV"
+            printf '%s\n' "$lid" >> "$GITHUB_ENV"
+            echo "EOF" >> "$GITHUB_ENV"
+          fi
+          if [ -n "$snap" ]; then
+            echo "EXPO_PUBLIC_PLAY_GAMES_SNAPSHOT_NAME<<EOF" >> "$GITHUB_ENV"
+            printf '%s\n' "$snap" >> "$GITHUB_ENV"
+            echo "EOF" >> "$GITHUB_ENV"
+          fi
+          aaid="${{ github.event.inputs.admob_android_app_id }}"
+          aiid="${{ github.event.inputs.admob_ios_app_id }}"
+          abid="${{ github.event.inputs.admob_android_banner_id }}"
+          aibid="${{ github.event.inputs.admob_ios_banner_id }}"
+          aaoid="${{ github.event.inputs.admob_android_app_open_id }}"
+          aiooid="${{ github.event.inputs.admob_ios_app_open_id }}"
+          if [ -n "$aaid" ]; then
+            echo "EXPO_PUBLIC_ADMOB_ANDROID_APP_ID<<EOF" >> "$GITHUB_ENV"
+            printf '%s\n' "$aaid" >> "$GITHUB_ENV"
+            echo "EOF" >> "$GITHUB_ENV"
+          fi
+          if [ -n "$aiid" ]; then
+            echo "EXPO_PUBLIC_ADMOB_IOS_APP_ID<<EOF" >> "$GITHUB_ENV"
+            printf '%s\n' "$aiid" >> "$GITHUB_ENV"
+            echo "EOF" >> "$GITHUB_ENV"
+          fi
+          if [ -n "$abid" ]; then
+            echo "EXPO_PUBLIC_ADMOB_ANDROID_BANNER_ID<<EOF" >> "$GITHUB_ENV"
+            printf '%s\n' "$abid" >> "$GITHUB_ENV"
+            echo "EOF" >> "$GITHUB_ENV"
+          fi
+          if [ -n "$aibid" ]; then
+            echo "EXPO_PUBLIC_ADMOB_IOS_BANNER_ID<<EOF" >> "$GITHUB_ENV"
+            printf '%s\n' "$aibid" >> "$GITHUB_ENV"
+            echo "EOF" >> "$GITHUB_ENV"
+          fi
+          if [ -n "$aaoid" ]; then
+            echo "EXPO_PUBLIC_ADMOB_ANDROID_APP_OPEN_ID<<EOF" >> "$GITHUB_ENV"
+            printf '%s\n' "$aaoid" >> "$GITHUB_ENV"
+            echo "EOF" >> "$GITHUB_ENV"
+          fi
+          if [ -n "$aiooid" ]; then
+            echo "EXPO_PUBLIC_ADMOB_IOS_APP_OPEN_ID<<EOF" >> "$GITHUB_ENV"
+            printf '%s\n' "$aiooid" >> "$GITHUB_ENV"
+            echo "EOF" >> "$GITHUB_ENV"
+          fi
+
+      - name: Print Metro public env
+        run: |
+          echo "EXPO_PUBLIC_PLAY_GAMES_PROJECT_ID=${EXPO_PUBLIC_PLAY_GAMES_PROJECT_ID:-}"
+          echo "EXPO_PUBLIC_PLAY_GAMES_LEADERBOARD_ID=${EXPO_PUBLIC_PLAY_GAMES_LEADERBOARD_ID:-}"
+          echo "EXPO_PUBLIC_PLAY_GAMES_SNAPSHOT_NAME=${EXPO_PUBLIC_PLAY_GAMES_SNAPSHOT_NAME:-}"
+          echo "EXPO_PUBLIC_ADMOB_ANDROID_APP_ID=${EXPO_PUBLIC_ADMOB_ANDROID_APP_ID:-}"
+          echo "EXPO_PUBLIC_ADMOB_IOS_APP_ID=${EXPO_PUBLIC_ADMOB_IOS_APP_ID:-}"
+          echo "EXPO_PUBLIC_ADMOB_ANDROID_BANNER_ID=${EXPO_PUBLIC_ADMOB_ANDROID_BANNER_ID:-}"
+          echo "EXPO_PUBLIC_ADMOB_IOS_BANNER_ID=${EXPO_PUBLIC_ADMOB_IOS_BANNER_ID:-}"
+          echo "EXPO_PUBLIC_ADMOB_ANDROID_APP_OPEN_ID=${EXPO_PUBLIC_ADMOB_ANDROID_APP_OPEN_ID:-}"
+          echo "EXPO_PUBLIC_ADMOB_IOS_APP_OPEN_ID=${EXPO_PUBLIC_ADMOB_IOS_APP_OPEN_ID:-}"
 
       - name: Bump iOS build number for CI
         run: |

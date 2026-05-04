@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { useGameStore } from '@/game/store/gameStore';
 import { feedbackGameOver } from '@/game/utils/sound';
 import { saveHighScore, loadHighScore } from '@/game/utils/storage';
+import { syncPlayGamesAfterSession } from '@/playGames/persistence';
 
 export function useNavigateWhenGameOver(status: string) {
   const router = useRouter();
@@ -17,6 +18,7 @@ export function useNavigateWhenGameOver(status: string) {
         const best = Math.max(stored, finalScore);
         saveHighScore(best);
         setHighScore(best);
+        void syncPlayGamesAfterSession(best, finalScore);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         router.replace('/gameover' as any);
       });

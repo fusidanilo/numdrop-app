@@ -1,0 +1,16 @@
+{
+  "appName": "Numdrop",
+  "back": "Atrás",
+  "start": "Empezar",
+  "home": "Inicio",
+  "ready": "¿Listo?",
+  "best": "Mejor",
+  "score": "Puntuación",
+  "newBest": "¡Nuevo récord!",
+  "playAgain": "Jugar otra vez",
+  "playAgainLower": "Jugar otra vez",
+  "gameOver": "Fin de la partida",
+  "round": "Ronda",
+  "streak": "Racha",
+  "gameOverTitle": "Game Over"
+}

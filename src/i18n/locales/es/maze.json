@@ -1,0 +1,29 @@
+{
+  "hudScore": "PUNTOS",
+  "hudRound": "RONDA",
+  "hudStreak": "RACHA",
+  "streakEmpty": "—",
+  "trace": "TRAZA",
+  "pathOver": {
+    "modeTitle": "Camino",
+    "subtitle": "Fin de la partida"
+  },
+  "tipsPath": [
+    {
+      "title": "Cómo jugar",
+      "body": "Arriba de la cuadrícula aparece la secuencia objetivo. Arrastra por las fichas para unirlas en el orden exacto de color y número."
+    },
+    {
+      "title": "Pasos adyacentes",
+      "body": "Cada nueva casilla debe ser ortogonal a la anterior (arriba, abajo, izquierda o derecha). No puedes reutilizar una casilla en el mismo camino."
+    },
+    {
+      "title": "Tiempo",
+      "body": "El reloj cuenta atrás. Cada ronda devuelve tiempo, pero el bonus y el tope máximo bajan con el avance: no llegues a cero."
+    },
+    {
+      "title": "Puntuación y racha",
+      "body": "Las secuencias largas y las rachas multiplican los puntos. Un camino mal borra la racha, pero puedes intentarlo al instante."
+    }
+  ]
+}

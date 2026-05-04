@@ -2,6 +2,7 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View, Text, Pressable, useWindowDimensions } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { usePreventRemove } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useGameStore } from '@/game/store/gameStore';
@@ -95,6 +96,14 @@ export default function GameScreen() {
   }, [resetSessionIdle, router]);
 
   useAndroidGameBack(openPauseMenu);
+
+  const preventLeaveWhilePlaying = status === 'playing' && !isPaused;
+  usePreventRemove(
+    preventLeaveWhilePlaying,
+    useCallback(() => {
+      useGameStore.getState().setPaused(true);
+    }, []),
+  );
 
   const handleTileTap = useCallback(
     (tile: TileData) => {

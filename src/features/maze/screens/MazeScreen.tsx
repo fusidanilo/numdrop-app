@@ -1,7 +1,8 @@
-import React, { useMemo, useCallback, useEffect } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { View, Text, Pressable, useWindowDimensions } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useRouter, useNavigation } from 'expo-router';
+import { usePreventRemove } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useMazeStore } from '@/features/maze/store/mazeStore';
 import { useMazeTimer } from '@/features/maze/hooks/useMazeTimer';
@@ -21,7 +22,6 @@ import {
 export default function MazeScreen() {
   const { t, i18n } = useTranslation(['maze', 'game']);
   const router = useRouter();
-  const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
 
@@ -65,16 +65,14 @@ export default function MazeScreen() {
 
   useMazeAndroidBack(openPauseMenu);
 
-  /** iOS swipe-back / stack pop: apre la pausa invece di uscire mentre si gioca. */
-  useEffect(() => {
-    const unsub = navigation.addListener('beforeRemove', (e) => {
-      const { status: st, isPaused: paused } = useMazeStore.getState();
-      if (st !== 'playing' || paused) return;
-      e.preventDefault();
+  /** iOS swipe-back / stack pop: pausa invece di uscire mentre si gioca (native-stack + usePreventRemove). */
+  const preventLeaveWhilePlaying = status === 'playing' && !isPaused;
+  usePreventRemove(
+    preventLeaveWhilePlaying,
+    useCallback(() => {
       useMazeStore.getState().setPaused(true);
-    });
-    return unsub;
-  }, [navigation]);
+    }, []),
+  );
 
   const gridSize = width - MAZE_HORIZONTAL_PADDING * 2;
 

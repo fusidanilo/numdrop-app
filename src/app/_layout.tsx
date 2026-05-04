@@ -25,11 +25,20 @@ export default function RootLayout() {
           <Stack.Screen name="index" />
           <Stack.Screen name="game" />
           <Stack.Screen name="gameover" />
-          <Stack.Screen name="maze" />
+          <Stack.Screen
+            name="maze"
+            options={{ headerBackButtonMenuEnabled: false }}
+          />
           <Stack.Screen name="mazeover" />
-          <Stack.Screen name="trace" />
+          <Stack.Screen
+            name="trace"
+            options={{ headerBackButtonMenuEnabled: false }}
+          />
           <Stack.Screen name="traceover" />
-          <Stack.Screen name="slide" />
+          <Stack.Screen
+            name="slide"
+            options={{ headerBackButtonMenuEnabled: false }}
+          />
           <Stack.Screen name="slideover" />
         </Stack>
         <AppOpenAdsController />

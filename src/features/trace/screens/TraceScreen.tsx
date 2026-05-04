@@ -1,7 +1,8 @@
-import React, { useMemo, useCallback, useEffect } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { View, Text, Pressable, useWindowDimensions } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useRouter, useNavigation } from 'expo-router';
+import { usePreventRemove } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTraceStore } from '@/features/trace/store/traceStore';
 import { useTraceTimer } from '@/features/trace/hooks/useTraceTimer';
@@ -21,7 +22,6 @@ import {
 export default function TraceScreen() {
   const { t, i18n } = useTranslation(['trace', 'game']);
   const router = useRouter();
-  const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
 
@@ -65,15 +65,13 @@ export default function TraceScreen() {
 
   useTraceAndroidBack(openPauseMenu);
 
-  useEffect(() => {
-    const unsub = navigation.addListener('beforeRemove', (e) => {
-      const { status: st, isPaused: paused } = useTraceStore.getState();
-      if (st !== 'playing' || paused) return;
-      e.preventDefault();
+  const preventLeaveWhilePlaying = status === 'playing' && !isPaused;
+  usePreventRemove(
+    preventLeaveWhilePlaying,
+    useCallback(() => {
       useTraceStore.getState().setPaused(true);
-    });
-    return unsub;
-  }, [navigation]);
+    }, []),
+  );
 
   const gridSize = width - MAZE_HORIZONTAL_PADDING * 2;
 

@@ -8,7 +8,8 @@ import {
   Platform,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useRouter, useNavigation } from 'expo-router';
+import { usePreventRemove } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSlideStore } from '@/features/slide/store/slideStore';
 import { useSlideTimer } from '@/features/slide/hooks/useSlideTimer';
@@ -27,7 +28,6 @@ import {
 export default function SlideScreen() {
   const { t, i18n } = useTranslation(['slide', 'game', 'common']);
   const router = useRouter();
-  const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
 
@@ -99,15 +99,13 @@ export default function SlideScreen() {
 
   useSlideAndroidBack(openPauseMenu);
 
-  useEffect(() => {
-    const unsub = navigation.addListener('beforeRemove', (e) => {
-      const { status: st, isPaused: paused } = useSlideStore.getState();
-      if (st !== 'playing' || paused) return;
-      e.preventDefault();
+  const preventLeaveWhilePlaying = status === 'playing' && !isPaused;
+  usePreventRemove(
+    preventLeaveWhilePlaying,
+    useCallback(() => {
       useSlideStore.getState().setPaused(true);
-    });
-    return unsub;
-  }, [navigation]);
+    }, []),
+  );
 
   const gridOuterSize = width - SLIDE_HORIZONTAL_PADDING * 2;
 

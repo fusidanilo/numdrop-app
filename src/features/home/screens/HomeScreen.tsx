@@ -9,7 +9,7 @@ import { useTraceStore } from '@/features/trace/store/traceStore';
 import { useSlideStore } from '@/features/slide/store/slideStore';
 import { useHydrateHighScore } from '@/features/home/hooks/useHydrateHighScore';
 import { styles } from '@/features/home/styles/home.styles';
-
+import { ONLY_CLASSIC_MODE } from '@/game/config/modesAvailability';
 
 export default function HomeScreen() {
   const { t } = useTranslation(['common', 'home']);
@@ -28,6 +28,7 @@ export default function HomeScreen() {
   useHydrateHighScore();
 
   useEffect(() => {
+    if (ONLY_CLASSIC_MODE) return;
     void loadMazeHighScore();
     void loadTraceHighScore();
     void loadEndless();
@@ -54,7 +55,7 @@ export default function HomeScreen() {
         <Text style={styles.title}>{t('appName')}</Text>
 
         <View style={styles.modeMenu}>
-          <Text style={styles.chooseModeLabel}>{t('chooseMode')}</Text>
+          {!ONLY_CLASSIC_MODE && <Text style={styles.chooseModeLabel}>{t('chooseMode')}</Text>}
           <Pressable
             style={({ pressed }) => [styles.modeCard, pressed && styles.modeCardPressed]}
             onPress={() => router.push('/game')}
@@ -69,61 +70,65 @@ export default function HomeScreen() {
             )}
           </Pressable>
 
-          <Pressable
-            style={({ pressed }) => [styles.modeCard, pressed && styles.modeCardPressed]}
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            onPress={() => {
-              useMazeStore.getState().resetToIdle();
-              router.push('/maze' as any);
-            }}
-          >
-            <Text style={styles.modeName}>{t('pathTitle')}</Text>
-            <Text style={styles.modeDescription}>{t('pathDesc')}</Text>
-            {mazeHighScore > 0 && (
-              <View style={styles.modeBestRow}>
-                <Text style={styles.modeBestLabel}>{t('best')}</Text>
-                <Text style={styles.modeBestValue}>{mazeHighScore}</Text>
-              </View>
-            )}
-          </Pressable>
+          {!ONLY_CLASSIC_MODE && (
+            <>
+              <Pressable
+                style={({ pressed }) => [styles.modeCard, pressed && styles.modeCardPressed]}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                onPress={() => {
+                  useMazeStore.getState().resetToIdle();
+                  router.push('/maze' as any);
+                }}
+              >
+                <Text style={styles.modeName}>{t('pathTitle')}</Text>
+                <Text style={styles.modeDescription}>{t('pathDesc')}</Text>
+                {mazeHighScore > 0 && (
+                  <View style={styles.modeBestRow}>
+                    <Text style={styles.modeBestLabel}>{t('best')}</Text>
+                    <Text style={styles.modeBestValue}>{mazeHighScore}</Text>
+                  </View>
+                )}
+              </Pressable>
 
-          <Pressable
-            style={({ pressed }) => [styles.modeCard, pressed && styles.modeCardPressed]}
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            onPress={() => {
-              useTraceStore.getState().resetToIdle();
-              router.push('/trace' as any);
-            }}
-          >
-            <Text style={styles.modeName}>{t('traceTitle')}</Text>
-            <Text style={styles.modeDescription}>{t('traceDesc')}</Text>
-            {traceHighScore > 0 && (
-              <View style={styles.modeBestRow}>
-                <Text style={styles.modeBestLabel}>{t('best')}</Text>
-                <Text style={styles.modeBestValue}>{traceHighScore}</Text>
-              </View>
-            )}
-          </Pressable>
+              <Pressable
+                style={({ pressed }) => [styles.modeCard, pressed && styles.modeCardPressed]}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                onPress={() => {
+                  useTraceStore.getState().resetToIdle();
+                  router.push('/trace' as any);
+                }}
+              >
+                <Text style={styles.modeName}>{t('traceTitle')}</Text>
+                <Text style={styles.modeDescription}>{t('traceDesc')}</Text>
+                {traceHighScore > 0 && (
+                  <View style={styles.modeBestRow}>
+                    <Text style={styles.modeBestLabel}>{t('best')}</Text>
+                    <Text style={styles.modeBestValue}>{traceHighScore}</Text>
+                  </View>
+                )}
+              </Pressable>
 
-          <Pressable
-            style={({ pressed }) => [styles.modeCard, pressed && styles.modeCardPressed]}
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            onPress={() => {
-              useSlideStore.getState().resetToIdle();
-              router.push('/slide' as any);
-            }}
-          >
-            <Text style={styles.modeName}>{t('slideTitle')}</Text>
-            <Text style={styles.modeDescription}>{t('slideDesc')}</Text>
-            {slideHasRecord && (
-              <View style={styles.modeBestRow}>
-                <Text style={styles.modeBestLabelPlain}>{t('slideBest')}</Text>
-                <Text style={styles.modeBestValue}>
-                  {t('slideBestValue', { round: slideBestRound, ns: 'home' })}
-                </Text>
-              </View>
-            )}
-          </Pressable>
+              <Pressable
+                style={({ pressed }) => [styles.modeCard, pressed && styles.modeCardPressed]}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                onPress={() => {
+                  useSlideStore.getState().resetToIdle();
+                  router.push('/slide' as any);
+                }}
+              >
+                <Text style={styles.modeName}>{t('slideTitle')}</Text>
+                <Text style={styles.modeDescription}>{t('slideDesc')}</Text>
+                {slideHasRecord && (
+                  <View style={styles.modeBestRow}>
+                    <Text style={styles.modeBestLabelPlain}>{t('slideBest')}</Text>
+                    <Text style={styles.modeBestValue}>
+                      {t('slideBestValue', { round: slideBestRound, ns: 'home' })}
+                    </Text>
+                  </View>
+                )}
+              </Pressable>
+            </>
+          )}
         </View>
       </ScrollView>
     </View>
